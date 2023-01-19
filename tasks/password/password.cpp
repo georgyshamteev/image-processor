@@ -20,7 +20,7 @@ bool ValidatePassword(const std::string& password) {
         }
         if (islower(password[i])) {
             lower = 1;
-        } else if (isupper(password[i])){
+        } else if (isupper(password[i])) {
             upper = 1;
         } else if (isdigit(password[i])) {
             nums = 1;
