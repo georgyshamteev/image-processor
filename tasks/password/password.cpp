@@ -1,31 +1,32 @@
 #include "password.h"
 
-bool ValidatePassword(const std::string& password) {
-    const int lower_bound = 8;
-    const int upper_bound = 14;
-    int lower = 0;
-    int upper = 0;
-    int nums = 0;
-    int other = 0;
-    const int lowerchar = 33;
-    const int upperchar = 126;
+const int LOWER_BOUND = 8;
+const int UPPER_BOUND = 14;
+const int LOWERCHAR = 33;
+const int UPPERCHAR = 126;
 
-    if (lower_bound > password.size() || password.size() > upper_bound) {
+bool ValidatePassword(const std::string& password) {
+    bool lower = false;
+    bool upper = false;
+    bool nums = false;
+    bool other = false;
+
+    if (LOWER_BOUND > password.size() || password.size() > UPPER_BOUND) {
         return false;
     }
 
-    for (uint64_t i = 0; i < password.size(); ++i) {
-        if (password[i] < lowerchar || password[i] > upperchar) {
+    for (size_t i = 0; i < password.size(); ++i) {
+        if (password[i] < LOWERCHAR || password[i] > UPPERCHAR) {
             return false;
         }
         if (islower(password[i])) {
-            lower = 1;
+            lower = true;
         } else if (isupper(password[i])) {
-            upper = 1;
+            upper = true;
         } else if (isdigit(password[i])) {
-            nums = 1;
+            nums = true;
         } else {
-            other = 1;
+            other = true;
         }
     }
     if (lower + upper + nums + other < 3) {
