@@ -8,6 +8,12 @@ bool MyComparator(const Applicant*& lhv, const Applicant*& rhv) {
            std::tie(lhv->points, rhv->student.birth_date.year, rhv->student.birth_date.month,
                     rhv->student.birth_date.day, rhv->student.name);
 }
+struct PtrComp {
+    bool operator() (const std::string* lhv, const std::string* rhv) const {
+        return *lhv < *rhv;
+    }
+};
+
 
 void SortStudents(std::vector<const Applicant*>& students) {
     std::sort(students.begin(), students.end(), MyComparator);
@@ -20,16 +26,16 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         students.push_back(&app);
     }
     SortStudents(students);
-    std::map<std::string, size_t> universities_map;
+    std::map<const std::string*, size_t, PtrComp> universities_map;
     for (const University& item : universities) {
-        universities_map[item.name] = item.max_students;
+        universities_map[&item.name] = item.max_students;
     }
     for (const Applicant*& pupil : students) {
         const Student* p = &pupil->student;
         for (const std::string& vuz : pupil->wish_list) {
-            if (universities_map[vuz] > 0) {
+            if (universities_map[&vuz] > 0) {
                 result[vuz].push_back(p);
-                universities_map[vuz] -= 1;
+                universities_map[&vuz] -= 1;
                 break;
             }
         }
