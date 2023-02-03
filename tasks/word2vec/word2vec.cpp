@@ -6,7 +6,7 @@
 int64_t DotProduct(const std::vector<int>& a, const std::vector<int>& b) {
     int64_t sm = 0;
     for (size_t i = 0; i < a.size(); ++i) {
-        sm = sm + a[i] * b[i];
+        sm = sm + static_cast<int64_t>(a[i]) * static_cast<int64_t>(b[i]);
     }
     return sm;
 }
