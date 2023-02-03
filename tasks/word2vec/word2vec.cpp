@@ -25,7 +25,7 @@ std::vector<std::string> FindClosestWords(const std::vector<std::string>& words,
             maximum = dot_prod;
         }
     }
-    for (std::pair<std::string, std::int64_t> item : mp) {
+    for (const std::pair<const std::string, std::int64_t>& item : mp) {
         if (item.second == maximum) {
             result.push_back(item.first);
         }
