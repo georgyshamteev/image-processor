@@ -1,5 +1,5 @@
-#include <iostream>
 #include <map>
+
 #include "admission.h"
 
 bool MyComparator(const Applicant*& lhv, const Applicant*& rhv) {
@@ -7,12 +7,6 @@ bool MyComparator(const Applicant*& lhv, const Applicant*& rhv) {
                     lhv->student.birth_date.day, lhv->student.name) <
            std::tie(lhv->points, rhv->student.birth_date.year, rhv->student.birth_date.month,
                     rhv->student.birth_date.day, rhv->student.name);
-}
-
-bool FinalComparator(const Applicant*& lhv, const Applicant*& rhv) {
-    return std::tie(lhv->student.name, lhv->student.birth_date.year, lhv->student.birth_date.month,
-                    lhv->student.birth_date.day) < std::tie(rhv->student.name, rhv->student.birth_date.year,
-                                                            rhv->student.birth_date.month, rhv->student.birth_date.day);
 }
 
 void SortStudents(std::vector<const Applicant*>& students) {
