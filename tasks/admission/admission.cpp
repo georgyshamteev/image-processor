@@ -9,11 +9,10 @@ bool MyComparator(const Applicant*& lhv, const Applicant*& rhv) {
                     rhv->student.birth_date.day, rhv->student.name);
 }
 struct PtrComp {
-    bool operator() (const std::string* lhv, const std::string* rhv) const {
+    bool operator()(const std::string* lhv, const std::string* rhv) const {
         return *lhv < *rhv;
     }
 };
-
 
 void SortStudents(std::vector<const Applicant*>& students) {
     std::sort(students.begin(), students.end(), MyComparator);
