@@ -14,7 +14,7 @@ std::vector<std::string> StudentsOrder(const std::vector<StudentAction>& student
         }
     }
     for (const size_t& query : queries) {
-        result.push_back(dq[query-1]);
+        result.push_back(dq[query - 1]);
     }
     return result;
 }
