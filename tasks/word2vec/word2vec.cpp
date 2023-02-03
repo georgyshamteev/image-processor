@@ -13,9 +13,11 @@ int64_t DotProduct(const std::vector<int>& a, const std::vector<int>& b) {
 
 std::vector<std::string> FindClosestWords(const std::vector<std::string>& words,
                                           const std::vector<std::vector<int>>& vectors) {
-
-    int64_t maximum = DotProduct(vectors[0], vectors[1]);
     std::vector<std::string> result;
+    if (words.size() < 2) {
+        return result;
+    }
+    int64_t maximum = DotProduct(vectors[0], vectors[1]);
     std::map<std::string, std::int64_t> mp;
 
     for (size_t i = 1; i < words.size(); ++i) {
