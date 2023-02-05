@@ -2,6 +2,9 @@
 #include "unixpath.h"
 
 std::string NormalizePath(std::string_view current_working_dir, std::string_view path) {
+    if (path[0] == '/') {
+        return static_cast<std::string>(path);
+    }
     std::deque<std::string> abs_path;
     std::string curr;
     for (const char& ch : current_working_dir) {
