@@ -24,14 +24,19 @@ ScoreTable GetScoredStudents(const Events& events, time_t score_time) {
     SortEvents(ptrs);
 
     for (const Event* event : ptrs) {
-        if (event->event_type == EventType::CheckFailed) {
-            mp[event->student_name][event->task_name].first = false;
-        } else if (event->event_type == EventType::CheckSuccess) {
-            mp[event->student_name][event->task_name].first = true;
-        } else if (event->event_type == EventType::MergeRequestOpen) {
-            mp[event->student_name][event->task_name].second = true;
-        } else if (event->event_type == EventType::MergeRequestClosed) {
-            mp[event->student_name][event->task_name].second = false;
+        switch (event->event_type) {
+            case EventType::CheckFailed:
+                mp[event->student_name][event->task_name].first = false;
+                break;
+            case EventType::CheckSuccess:
+                mp[event->student_name][event->task_name].first = true;
+                break;
+            case EventType::MergeRequestOpen:
+                mp[event->student_name][event->task_name].second = true;
+                break;
+            case EventType::MergeRequestClosed:
+                mp[event->student_name][event->task_name].second = false;
+                break;
         }
     }
 
