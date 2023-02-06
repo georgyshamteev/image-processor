@@ -2,7 +2,7 @@
 
 #include "admission.h"
 
-bool MyComparator(const Applicant*& lhv, const Applicant*& rhv) {
+bool MyComparator(const Applicant* lhv, const Applicant* rhv) {
     return std::tie(rhv->points, lhv->student.birth_date.year, lhv->student.birth_date.month,
                     lhv->student.birth_date.day, lhv->student.name) <
            std::tie(lhv->points, rhv->student.birth_date.year, rhv->student.birth_date.month,
@@ -29,7 +29,7 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
     for (const University& item : universities) {
         universities_map[&item.name] = item.max_students;
     }
-    for (const Applicant*& pupil : students) {
+    for (const Applicant* pupil : students) {
         const Student* p = &pupil->student;
         for (const std::string& vuz : pupil->wish_list) {
             if (universities_map[&vuz] > 0) {
