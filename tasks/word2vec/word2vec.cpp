@@ -6,7 +6,7 @@
 int64_t DotProduct(const std::vector<int>& a, const std::vector<int>& b) {
     int64_t sm = 0;
     for (size_t i = 0; i < a.size(); ++i) {
-        sm = sm + static_cast<int64_t>(a[i]) * static_cast<int64_t>(b[i]);
+        sm += static_cast<int64_t>(a[i]) * static_cast<int64_t>(b[i]);
     }
     return sm;
 }
@@ -27,7 +27,7 @@ std::vector<std::string> FindClosestWords(const std::vector<std::string>& words,
             maximum = dot_prod;
         }
     }
-    for (const std::pair<const std::string, std::int64_t>& item : mp) {
+    for (const auto& item : mp) {
         if (item.second == maximum) {
             result.push_back(item.first);
         }
