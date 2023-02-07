@@ -126,6 +126,9 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     std::vector<std::string_view> final;
     QUERY query_set = FillQuery(query);
     std::pair<std::pair<MYMAP, STRINGMAP>, size_t> para = PrepareText(text, query_set);
+    if (para.first.second.empty()) {
+        return final;
+    }
     for (auto& row : para.first.first) {
         double tfidf = CountTfIdf(std::make_pair(row.first, row.second), query_set, para.second).second;
         if (tfidf > 0) {
