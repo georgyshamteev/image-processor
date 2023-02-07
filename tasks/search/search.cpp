@@ -105,11 +105,11 @@ std::pair<std::pair<MYMAP, STRINGMAP>, size_t> PrepareText(std::string_view text
 }
 
 double CountTf(std::pair<const std::string_view, int>& table, int& total) {
-    return static_cast<double>(table.second) / total;
+    return static_cast<double>(table.second) / static_cast<double>(total);
 }
 
 double CountIdf(std::string_view word, QUERY& query, size_t& str_cnt) {
-    return std::log(static_cast<double>(str_cnt) / query[word].size());
+    return std::log(static_cast<double>(str_cnt) / static_cast<double>(query[word].size()));
 }
 
 std::pair<size_t, double> CountTfIdf(std::pair<size_t, std::pair<std::map<std::string_view, int, MyComp>, int>> str,
