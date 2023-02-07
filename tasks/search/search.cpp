@@ -136,7 +136,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
         std::sort(result.begin(), result.end(), ResComp);
     }
-    for (size_t i = 0; i < results_count; ++i) {
+    for (size_t i = 0; i < results_count && i < result.size(); ++i) {
         final.push_back(para.first.second[result[i].second]);
     }
     return final;
