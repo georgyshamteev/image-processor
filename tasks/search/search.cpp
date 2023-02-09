@@ -5,7 +5,7 @@
 #include <cmath>
 
 struct MyComp {
-    bool operator()(const std::string_view& a, const std::string_view& b) const {
+    bool operator()(std::string_view a, std::string_view b) const {
         size_t n = std::min(a.size(), b.size());
         for (size_t i = 0; i < n; ++i) {
             if (tolower(a[i]) == tolower(b[i])) {
@@ -72,13 +72,15 @@ std::pair<std::pair<MYMAP, STRINGMAP>, size_t> PrepareText(std::string_view text
         ++len_str;
 
         if (std::isalpha(text[i])) {
-
             if (word_flag) {
                 word_start_index = i;
                 word_flag = false;
             }
+
             ++len_word;
+
         } else if (len_word > 0) {
+
             if (query_set.find(text.substr(word_start_index, len_word)) != query_set.end()) {
                 ++mp[strings_count].first[text.substr(word_start_index, len_word)];
                 query_set[text.substr(word_start_index, len_word)].insert(strings_count);
@@ -129,7 +131,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     if (para.first.second.empty()) {
         return final;
     }
-    for (auto& row : para.first.first) {
+    for (const auto& row : para.first.first) {
         double tfidf = CountTfIdf(std::make_pair(row.first, row.second), query_set, para.second).second;
         if (tfidf > 0) {
             result.push_back(std::make_pair(tfidf, row.first));
