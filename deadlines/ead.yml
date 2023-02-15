@@ -13,7 +13,7 @@
 
 - group:    02-homework-two
   start:    01-02-2023 00:00
-  deadline: 15-02-2023 23:59
+  deadline: 20-02-2023 23:59
   tasks:
     - task: admission
       score: 100
@@ -30,7 +30,7 @@
 
 - group:    01-homework-one
   start:    18-01-2023 00:00
-  deadline: 01-02-2023 23:59
+  deadline: 06-02-2023 23:59
   tasks:
     - task: associative_operation
       score: 100
