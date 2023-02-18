@@ -33,6 +33,9 @@ QUERY SearchEngine::FillQuery(std::string_view query) const {
 }
 
 void SearchEngine::BuildIndex(std::string_view text) {
+    num_2_str_.clear();
+    count_words_in_str_.clear();
+    count_total_words_.clear();
     bool word_flag = true;
     bool str_flag = true;
     size_t strings_count = 1;
@@ -96,7 +99,6 @@ long double SearchEngine::CountIdf(std::string_view word) const {
     if (ptr == count_total_words_.end()) {
         return 0;
     }
-    std::cout << num_2_str_.size() << std::endl;
     return std::log(static_cast<long double>(num_2_str_.size()) / static_cast<double>(ptr->second.size()));
 }
 
@@ -113,7 +115,9 @@ std::vector<std::string_view> SearchEngine::Search(std::string_view query, size_
         for (auto word : query_set) {
             sm += CountTf(word, pair.first) * CountIdf(word);
         }
-        result.push_back(std::make_pair(sm, pair.first));
+        if (sm > 0) {
+            result.push_back(std::make_pair(sm, pair.first));
+        }
     }
 
     std::sort(result.begin(), result.end(), ResComp);
