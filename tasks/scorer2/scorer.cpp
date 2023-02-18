@@ -22,8 +22,8 @@ void Scorer::Reset() {
 
 ScoreTable Scorer::GetScoreTable() const {
     ScoreTable score_table;
-    for (const auto& student : map_of_students_) {
-        for (const auto& task : student.second) {
+    for (const auto &student : map_of_students_) {
+        for (const auto &task : student.second) {
             if (task.second.first && !task.second.second) {
                 score_table[student.first].insert(task.first);
             }
