@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cmath>
 
-
 bool ResComp(const std::pair<double, size_t>& lhs, const std::pair<double, size_t>& rhs) {
     return lhs.first > rhs.first;
 }
