@@ -12,6 +12,7 @@ public:
 
     std::string GetAbsolutePath() const;
     std::string GetRelativePath() const;
+
 private:
     std::deque<std::string> initial_dir_;
     std::string curr_dir_;
