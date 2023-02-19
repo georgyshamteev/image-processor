@@ -50,5 +50,5 @@ private:
     size_t height_;
     size_t cells_to_open_;
     std::set<std::pair<size_t, size_t>> used_;
-    std::pair<std::vector<std::pair<size_t, size_t>>, size_t> CheckNbr_(size_t y, size_t x) const;
+    std::pair<std::vector<std::pair<size_t, size_t>>, size_t> CheckNbr(size_t y, size_t x) const;
 };

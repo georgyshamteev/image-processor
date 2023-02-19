@@ -79,7 +79,7 @@ void Minesweeper::NewGame(size_t width, size_t height, const std::vector<Cell>& 
     }
 }
 
-std::pair<std::vector<std::pair<size_t, size_t>>, size_t> Minesweeper::CheckNbr_(size_t y, size_t x) const {
+std::pair<std::vector<std::pair<size_t, size_t>>, size_t> Minesweeper::CheckNbr(size_t y, size_t x) const {
     std::vector<std::pair<size_t, size_t>> result;
     size_t mines_around = 0;
     if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
@@ -165,7 +165,7 @@ void Minesweeper::OpenCell(const Minesweeper::Cell& cell) {
         game_status_ = GameStatus::DEFEAT;
         time_ans_ = std::time(nullptr) - time_from_start_;
     } else {
-        std::pair<std::vector<std::pair<size_t, size_t>>, size_t> vtr = CheckNbr_(cell.y, cell.x);
+        std::pair<std::vector<std::pair<size_t, size_t>>, size_t> vtr = CheckNbr(cell.y, cell.x);
         if (vtr.second > 0) {
             board_[cell.y][cell.x].isopen = true;
             --cells_to_open_;
@@ -186,7 +186,7 @@ void Minesweeper::OpenCell(const Minesweeper::Cell& cell) {
                     used_.insert(dq[0]);
                     board_[dq[0].first][dq[0].second].isopen = true;
                     --cells_to_open_;
-                    vtr = CheckNbr_(dq[0].first, dq[0].second);
+                    vtr = CheckNbr(dq[0].first, dq[0].second);
                     if (vtr.second == 0) {
                         for (auto i : vtr.first) {
                             if (used_.find(i) == used_.end()) {
@@ -245,7 +245,7 @@ Minesweeper::RenderedField Minesweeper::RenderField() const {
                 str += '*';
             }
             if (board_[i][j].isopen && !board_[i][j].ismine) {
-                auto tmp = Minesweeper::CheckNbr_(i, j).second;
+                auto tmp = Minesweeper::CheckNbr(i, j).second;
                 if (tmp == 0) {
                     str += '.';
                 } else {
