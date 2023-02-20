@@ -19,4 +19,7 @@ public:
     void Reset();
 
     ScoreTable GetScoreTable() const;
+
+private:
+    std::map<const StudentName, std::map<const TaskName, std::pair<bool, bool>>> map_of_students_;
 };
