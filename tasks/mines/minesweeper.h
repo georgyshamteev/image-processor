@@ -12,9 +12,9 @@ public:
     };
 
     struct GameCell {
-        bool isflag = false;
-        bool ismine = false;
-        bool isopen = false;
+        bool flag = false;
+        bool mine = false;
+        bool open = false;
     };
 
     enum class GameStatus {

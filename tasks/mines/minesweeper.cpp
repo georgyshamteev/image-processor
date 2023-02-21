@@ -1,15 +1,11 @@
 #include "minesweeper.h"
 
-#include <set>
 #include <random>
+#include <set>
 #include <ctime>
 #include <deque>
-#include <iostream>
 
-bool Mycomp(const std::pair<size_t, std::pair<size_t, size_t>>& lhv,
-            const std::pair<size_t, std::pair<size_t, size_t>>& rhv) {
-    return lhv.first < rhv.first;
-}
+using CellStruct = std::vector<std::pair<size_t, size_t>>;
 
 Minesweeper::Minesweeper(size_t width, size_t height, size_t mines_count) {
     NewGame(width, height, mines_count);
@@ -26,30 +22,25 @@ void Minesweeper::NewGame(size_t width, size_t height, size_t mines_count) {
     cells_to_open_ = width * height - mines_count;
     game_status_ = GameStatus::NOT_STARTED;
     used_.clear();
-    std::vector<std::pair<size_t, std::pair<size_t, size_t>>> cell_cet;
+    CellStruct cell_cet;
 
-    std::random_device rd;
-    std::mt19937 rng(rd());
-    const size_t high = cell_cet.size() * 10;
     for (size_t h = 0; h < height; ++h) {
         std::vector<GameCell> vt;
         for (size_t w = 0; w < width; ++w) {
             vt.push_back(GameCell{false, false, false});
-            std::uniform_int_distribution<int> uni(0, static_cast<int>(high));
-            size_t n = uni(rng);
-            cell_cet.push_back(std::make_pair(n, std::make_pair(h, w)));
+            cell_cet.push_back(std::make_pair(h, w));
         }
         board_.push_back(vt);
     }
 
-    std::sort(cell_cet.begin(), cell_cet.end(), Mycomp);
+    std::shuffle(cell_cet.begin(), cell_cet.end(), std::mt19937(std::random_device()()));
 
     size_t cnt = 0;
 
     while (cnt < mines_count) {
-        size_t y = cell_cet[cnt].second.second;
-        size_t x = cell_cet[cnt].second.first;
-        board_[y][x].ismine = true;
+        size_t y = cell_cet[cnt].second;
+        size_t x = cell_cet[cnt].first;
+        board_[y][x].mine = true;
         ++cnt;
     }
 }
@@ -71,11 +62,11 @@ void Minesweeper::NewGame(size_t width, size_t height, const std::vector<Cell>& 
 
     for (size_t h = 0; h < height; ++h) {
         for (size_t w = 0; w < width; ++w) {
-            board_[h][w].ismine = false;
+            board_[h][w].mine = false;
         }
     }
     for (auto cell : cells_with_mines) {
-        board_[cell.y][cell.x].ismine = true;
+        board_[cell.y][cell.x].mine = true;
     }
 }
 
@@ -83,35 +74,35 @@ std::pair<std::vector<std::pair<size_t, size_t>>, size_t> Minesweeper::CheckNbr(
     std::vector<std::pair<size_t, size_t>> result;
     size_t mines_around = 0;
     if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
-        if ((!board_[y - 1][x - 1].ismine)) {
+        if ((!board_[y - 1][x - 1].mine)) {
             result.push_back(std::make_pair(y - 1, x - 1));
         } else {
             ++mines_around;
         }
     }
     if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y) && (y < height_))) {
-        if (!board_[y][x - 1].ismine) {
+        if (!board_[y][x - 1].mine) {
             result.push_back(std::make_pair(y, x - 1));
         } else {
             ++mines_around;
         }
     }
     if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y + 1) && (y + 1 < height_))) {
-        if (!board_[y + 1][x - 1].ismine) {
+        if (!board_[y + 1][x - 1].mine) {
             result.push_back(std::make_pair(y + 1, x - 1));
         } else {
             ++mines_around;
         }
     }
     if (((0 <= x) && (x < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
-        if (!board_[y - 1][x].ismine) {
+        if (!board_[y - 1][x].mine) {
             result.push_back(std::make_pair(y - 1, x));
         } else {
             ++mines_around;
         }
     }
     if (((0 <= x) && (x < width_)) && ((0 <= y + 1) && (y + 1 < height_))) {
-        if (!board_[y + 1][x].ismine) {
+        if (!board_[y + 1][x].mine) {
             result.push_back(std::make_pair(y + 1, x));
 
         } else {
@@ -119,21 +110,21 @@ std::pair<std::vector<std::pair<size_t, size_t>>, size_t> Minesweeper::CheckNbr(
         }
     }
     if (((0 <= x + 1) && (x + 1 < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
-        if (!board_[y - 1][x + 1].ismine) {
+        if (!board_[y - 1][x + 1].mine) {
             result.push_back(std::make_pair(y - 1, x + 1));
         } else {
             ++mines_around;
         }
     }
     if (((0 <= x + 1) && (x + 1 < width_)) && ((0 <= y) && (y < height_))) {
-        if (!board_[y][x + 1].ismine) {
+        if (!board_[y][x + 1].mine) {
             result.push_back(std::make_pair(y, x + 1));
         } else {
             ++mines_around;
         }
     }
     if (((0 <= x + 1) && (x + 1 < width_)) && ((0 <= y + 1) && (y + 1 < height_))) {
-        if (!board_[y + 1][x + 1].ismine) {
+        if (!board_[y + 1][x + 1].mine) {
             result.push_back(std::make_pair(y + 1, x + 1));
         } else {
             ++mines_around;
@@ -151,15 +142,15 @@ void Minesweeper::OpenCell(const Minesweeper::Cell& cell) {
         time_from_start_ = std::time(nullptr);
     }
 
-    if (board_[cell.y][cell.x].isflag) {
+    if (board_[cell.y][cell.x].flag) {
         return;
     }
 
-    if (board_[cell.y][cell.x].ismine) {
+    if (board_[cell.y][cell.x].mine) {
         for (size_t i = 0; i < board_.size(); ++i) {
             for (size_t j = 0; j < board_[i].size(); ++j) {
-                board_[i][j].isopen = true;
-                board_[i][j].isflag = false;
+                board_[i][j].open = true;
+                board_[i][j].flag = false;
             }
         }
         game_status_ = GameStatus::DEFEAT;
@@ -167,7 +158,7 @@ void Minesweeper::OpenCell(const Minesweeper::Cell& cell) {
     } else {
         std::pair<std::vector<std::pair<size_t, size_t>>, size_t> vtr = CheckNbr(cell.y, cell.x);
         if (vtr.second > 0) {
-            board_[cell.y][cell.x].isopen = true;
+            board_[cell.y][cell.x].open = true;
             --cells_to_open_;
         } else {
             std::deque<std::pair<size_t, size_t>> dq;
@@ -178,13 +169,13 @@ void Minesweeper::OpenCell(const Minesweeper::Cell& cell) {
                     used_.insert(i);
                 }
             }
-            board_[cell.y][cell.x].isopen = true;
+            board_[cell.y][cell.x].open = true;
             --cells_to_open_;
             used_.insert(std::make_pair(cell.y, cell.x));
             while (!dq.empty()) {
-                if (!board_[dq[0].first][dq[0].second].ismine && !board_[dq[0].first][dq[0].second].isflag) {
+                if (!board_[dq[0].first][dq[0].second].mine && !board_[dq[0].first][dq[0].second].flag) {
                     used_.insert(dq[0]);
-                    board_[dq[0].first][dq[0].second].isopen = true;
+                    board_[dq[0].first][dq[0].second].open = true;
                     --cells_to_open_;
                     vtr = CheckNbr(dq[0].first, dq[0].second);
                     if (vtr.second == 0) {
@@ -214,10 +205,10 @@ void Minesweeper::MarkCell(const Cell& cell) {
         return;
     }
 
-    if (board_[cell.y][cell.x].isflag) {
-        board_[cell.y][cell.x].isflag = false;
+    if (board_[cell.y][cell.x].flag) {
+        board_[cell.y][cell.x].flag = false;
     } else {
-        board_[cell.y][cell.x].isflag = true;
+        board_[cell.y][cell.x].flag = true;
     }
 }
 
@@ -234,17 +225,17 @@ Minesweeper::RenderedField Minesweeper::RenderField() const {
     for (size_t i = 0; i < board_.size(); ++i) {
         std::string str;
         for (size_t j = 0; j < board_[i].size(); ++j) {
-            if (!board_[i][j].isopen) {
-                if (board_[i][j].isflag) {
+            if (!board_[i][j].open) {
+                if (board_[i][j].flag) {
                     str += '?';
                 } else {
                     str += '-';
                 }
             }
-            if (board_[i][j].isopen && board_[i][j].ismine) {
+            if (board_[i][j].open && board_[i][j].mine) {
                 str += '*';
             }
-            if (board_[i][j].isopen && !board_[i][j].ismine) {
+            if (board_[i][j].open && !board_[i][j].mine) {
                 auto tmp = Minesweeper::CheckNbr(i, j).second;
                 if (tmp == 0) {
                     str += '.';
