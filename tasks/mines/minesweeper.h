@@ -25,6 +25,7 @@ public:
     };
 
     using RenderedField = std::vector<std::string>;
+    using Neighbours = std::pair<std::vector<std::pair<size_t, size_t>>, size_t>;
 
     Minesweeper(size_t width, size_t height, size_t mines_count);
     Minesweeper(size_t width, size_t height, const std::vector<Cell>& cells_with_mines);
@@ -50,5 +51,5 @@ private:
     size_t height_;
     size_t cells_to_open_;
     std::set<std::pair<size_t, size_t>> used_;
-    std::pair<std::vector<std::pair<size_t, size_t>>, size_t> CheckNbr(size_t y, size_t x) const;
+    Neighbours CheckNbr(size_t y, size_t x) const;
 };

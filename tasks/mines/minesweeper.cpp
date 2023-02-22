@@ -70,7 +70,7 @@ void Minesweeper::NewGame(size_t width, size_t height, const std::vector<Cell>& 
     }
 }
 
-std::pair<std::vector<std::pair<size_t, size_t>>, size_t> Minesweeper::CheckNbr(size_t y, size_t x) const {
+Minesweeper::Neighbours Minesweeper::CheckNbr(size_t y, size_t x) const {
     std::vector<std::pair<size_t, size_t>> result;
     size_t mines_around = 0;
     if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
