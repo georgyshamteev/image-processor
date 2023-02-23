@@ -73,61 +73,16 @@ void Minesweeper::NewGame(size_t width, size_t height, const std::vector<Cell>& 
 Minesweeper::Neighbours Minesweeper::CheckNbr(size_t y, size_t x) const {
     std::vector<std::pair<size_t, size_t>> result;
     size_t mines_around = 0;
-    if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
-        if ((!board_[y - 1][x - 1].mine)) {
-            result.push_back(std::make_pair(y - 1, x - 1));
-        } else {
-            ++mines_around;
-        }
-    }
-    if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y) && (y < height_))) {
-        if (!board_[y][x - 1].mine) {
-            result.push_back(std::make_pair(y, x - 1));
-        } else {
-            ++mines_around;
-        }
-    }
-    if (((0 <= x - 1) && (x - 1 < width_)) && ((0 <= y + 1) && (y + 1 < height_))) {
-        if (!board_[y + 1][x - 1].mine) {
-            result.push_back(std::make_pair(y + 1, x - 1));
-        } else {
-            ++mines_around;
-        }
-    }
-    if (((0 <= x) && (x < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
-        if (!board_[y - 1][x].mine) {
-            result.push_back(std::make_pair(y - 1, x));
-        } else {
-            ++mines_around;
-        }
-    }
-    if (((0 <= x) && (x < width_)) && ((0 <= y + 1) && (y + 1 < height_))) {
-        if (!board_[y + 1][x].mine) {
-            result.push_back(std::make_pair(y + 1, x));
-
-        } else {
-            ++mines_around;
-        }
-    }
-    if (((0 <= x + 1) && (x + 1 < width_)) && ((0 <= y - 1) && (y - 1 < height_))) {
-        if (!board_[y - 1][x + 1].mine) {
-            result.push_back(std::make_pair(y - 1, x + 1));
-        } else {
-            ++mines_around;
-        }
-    }
-    if (((0 <= x + 1) && (x + 1 < width_)) && ((0 <= y) && (y < height_))) {
-        if (!board_[y][x + 1].mine) {
-            result.push_back(std::make_pair(y, x + 1));
-        } else {
-            ++mines_around;
-        }
-    }
-    if (((0 <= x + 1) && (x + 1 < width_)) && ((0 <= y + 1) && (y + 1 < height_))) {
-        if (!board_[y + 1][x + 1].mine) {
-            result.push_back(std::make_pair(y + 1, x + 1));
-        } else {
-            ++mines_around;
+    for (size_t i = 0; i < 3; ++i) {
+        for (size_t j = 0; j < 3; ++j) {
+            if ((((0 <= x - 1 + i) && (x - 1 + i < width_)) && ((0 <= y - 1 + j) && (y - 1 + j < height_))) &&
+                (!((i == 1) && (j == 1)))) {
+                if ((!board_[y - 1 + j][x - 1 + i].mine)) {
+                    result.push_back(std::make_pair(y - 1 + j, x - 1 + i));
+                } else {
+                    ++mines_around;
+                }
+            }
         }
     }
     return std::make_pair(result, mines_around);
