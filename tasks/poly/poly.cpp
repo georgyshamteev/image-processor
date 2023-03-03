@@ -80,22 +80,28 @@ Poly Poly::operator+(const Poly& other) const {
 }
 
 Poly Poly::operator+=(const Poly& other) {
+    Poly temp_pol;
+    temp_pol.coefs_ = this->coefs_;
     for (auto i : other.coefs_) {
-        this->coefs_[i.first] += i.second;
-        if (this->coefs_[i.first] == 0) {
-            this->coefs_.erase(i.first);
+        temp_pol.coefs_[i.first] += i.second;
+        if (temp_pol.coefs_[i.first] == 0) {
+            temp_pol.coefs_.erase(i.first);
         }
     }
+    this->coefs_ = temp_pol.coefs_;
     return *this;
 }
 
 Poly Poly::operator-=(const Poly& other) {
+    Poly temp_pol;
+    temp_pol.coefs_ = this->coefs_;
     for (auto i : other.coefs_) {
-        this->coefs_[i.first] -= i.second;
-        if (this->coefs_[i.first] == 0) {
-            this->coefs_.erase(i.first);
+        temp_pol.coefs_[i.first] -= i.second;
+        if (temp_pol.coefs_[i.first] == 0) {
+            temp_pol.coefs_.erase(i.first);
         }
     }
+    this->coefs_ = temp_pol.coefs_;
     return *this;
 }
 
