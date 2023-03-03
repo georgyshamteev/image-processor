@@ -113,14 +113,16 @@ Poly Poly::operator*(const Poly& other) const {
 }
 
 Poly Poly::operator*=(const Poly& other) {
+    Poly temp_poly;
     for (auto i : this->coefs_) {
         for (auto j : other.coefs_) {
-            this->coefs_[i.first + j.first] = i.second * j.second;
-            if (this->coefs_[i.first + j.first] == 0) {
-                this->coefs_.erase(i.first + j.first);
+            temp_poly.coefs_[i.first + j.first] = i.second * j.second;
+            if (temp_poly.coefs_[i.first + j.first] == 0) {
+                temp_poly.coefs_.erase(i.first + j.first);
             }
         }
     }
+    this->coefs_ = temp_poly.coefs_;
     return *this;
 }
 
