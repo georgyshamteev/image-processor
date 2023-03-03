@@ -122,7 +122,7 @@ Poly Poly::operator*=(const Poly& other) {
     Poly temp_poly;
     for (auto i : this->coefs_) {
         for (auto j : other.coefs_) {
-            temp_poly.coefs_[i.first + j.first] = i.second * j.second;
+            temp_poly.coefs_[i.first + j.first] += i.second * j.second;
             if (temp_poly.coefs_[i.first + j.first] == 0) {
                 temp_poly.coefs_.erase(i.first + j.first);
             }
