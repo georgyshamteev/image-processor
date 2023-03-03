@@ -115,7 +115,7 @@ Poly Poly::operator*(const Poly& other) const {
 Poly Poly::operator*=(const Poly& other) {
     for (auto i : this->coefs_) {
         for (auto j : other.coefs_) {
-            this->coefs_[i.first + j.first] += i.second * j.second;
+            this->coefs_[i.first + j.first] = i.second * j.second;
             if (this->coefs_[i.first + j.first] == 0) {
                 this->coefs_.erase(i.first + j.first);
             }
