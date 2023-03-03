@@ -5,7 +5,7 @@
 Poly::Poly(std::initializer_list<int64_t> lst) {
     size_t cnt = 0;
     for (auto item : lst) {
-        if (item > 0) {
+        if (item != 0) {
             coefs_[cnt] = item;
         }
         ++cnt;
