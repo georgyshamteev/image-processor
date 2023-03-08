@@ -31,6 +31,7 @@ CowString::~CowString() {
 
 CowString& CowString::operator=(const CowString& rhs) {
     mystr_ = rhs.mystr_;
+    mystr_->Inc();
 //    std::cout << "Copy assigned" << std::endl;
     return *this;
 }
@@ -84,6 +85,7 @@ CowString& CowString::operator+=(const CowString& other) {
     if (mystr_->GetCnt() == 1) {
         mystr_->SetStr(str);
     } else {
+        mystr_->Dec();
         mystr_ = new MyString(str);
     }
     return *this;
@@ -117,6 +119,7 @@ CowString& CowString::operator+=(std::string_view other) {
     if (mystr_->GetCnt() == 1) {
         mystr_->SetStr(str);
     } else {
+        mystr_->Dec();
         mystr_ = new MyString(str);
     }
     return *this;
@@ -179,6 +182,7 @@ CowString::ConstMyIterator CowString::end() const {
 
 CowString::MyIterator::MyIterator(CowString& link, size_t idx) : cow_link_(link) {
     cow_link_ = link;
+    this->cow_link_.mystr_->Dec();
     index_ = idx;
 }
 
@@ -300,6 +304,7 @@ void CowString::MyString::SetStr(char* ch) {
 CowString::MyIterator::Proxy::Proxy(char* ch, CowString& dad) : cow_link_(dad) {
     proxy_ch_ = ch;
     cow_link_ = dad;
+    this->cow_link_.mystr_->Dec();
 }
 
 CowString::MyIterator::Proxy& CowString::MyIterator::Proxy::operator=(const char& ch) {
