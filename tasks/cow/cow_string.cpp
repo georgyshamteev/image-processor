@@ -31,7 +31,10 @@ CowString::~CowString() {
 }
 
 CowString& CowString::operator=(const CowString& rhs) {
-    if (mystr_->Empty()) {
+//    if (!mystr_->Empty()) {
+//        mystr_->Dec();
+//    }
+    if (mystr_->GetCnt() < 1) {
         delete mystr_;
     }
     mystr_ = rhs.mystr_;
@@ -41,8 +44,11 @@ CowString& CowString::operator=(const CowString& rhs) {
 }
 
 CowString& CowString::operator=(CowString&& rhs) {
-    if(mystr_ -> Empty()){
-        delete mystr_;
+//    if (!mystr_->Empty()) {
+//        mystr_->Dec();
+//    }
+    if (mystr_->GetCnt() < 1) {
+        delete[] mystr_;
     }
     mystr_ = rhs.mystr_;
     rhs.mystr_ = nullptr;
