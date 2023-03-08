@@ -264,7 +264,7 @@ CowString::MyString::MyString(std::string_view value) {
 }
 
 CowString::MyString::~MyString() {
-    if (Empty()) {
+    if (this->GetCnt() <= 1) {
         delete[] str_;
     }
 }
