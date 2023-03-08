@@ -7,19 +7,19 @@ CowString::CowString(const CowString& rhs) {
     mystr_ = rhs.mystr_;
     mystr_->Inc();
 
-//    std::cout << "Copy constructor" << std::endl;
+    //    std::cout << "Copy constructor" << std::endl;
 }
 
 CowString::CowString(CowString&& rhs) {
     mystr_ = rhs.mystr_;
     rhs.mystr_ = nullptr;
 
-//    std::cout << "Move constructor" << std::endl;
+    //    std::cout << "Move constructor" << std::endl;
 }
 
 CowString::CowString(std::string_view value) {
     mystr_ = new MyString(value);
-//    std::cout << "SV created" << std::endl;
+    //    std::cout << "SV created" << std::endl;
 }
 
 CowString::~CowString() {
@@ -27,20 +27,26 @@ CowString::~CowString() {
     if (mystr_->Empty()) {
         delete mystr_;
     }
-//    std::cout << "Destroyed" << std::endl;
+    //    std::cout << "Destroyed" << std::endl;
 }
 
 CowString& CowString::operator=(const CowString& rhs) {
+    if (mystr_->Empty()) {
+        delete mystr_;
+    }
     mystr_ = rhs.mystr_;
     mystr_->Inc();
-//    std::cout << "Copy assigned" << std::endl;
+    //    std::cout << "Copy assigned" << std::endl;
     return *this;
 }
 
 CowString& CowString::operator=(CowString&& rhs) {
+    if(mystr_ -> Empty()){
+        delete mystr_;
+    }
     mystr_ = rhs.mystr_;
     rhs.mystr_ = nullptr;
-//    std::cout << "Move assigned" << std::endl;
+    //    std::cout << "Move assigned" << std::endl;
     return *this;
 }
 
@@ -57,7 +63,7 @@ CowString::MyIterator CowString::At(size_t idx) {
 }
 
 CowString CowString::operator+(const CowString& other) const {
-//    std::cout << "cow + cow" << std::endl;
+    //    std::cout << "cow + cow" << std::endl;
     CowString tmp_str;
     auto ln1 = strlen(mystr_->GetStr());
     auto ln2 = strlen(other.mystr_->GetStr());
@@ -73,7 +79,7 @@ CowString CowString::operator+(const CowString& other) const {
 }
 
 CowString& CowString::operator+=(const CowString& other) {
-//    std::cout << "cow += cow" << std::endl;
+    //    std::cout << "cow += cow" << std::endl;
     auto ln1 = strlen(mystr_->GetStr());
     auto ln2 = strlen(other.mystr_->GetStr());
     char* str = new char[ln1 + ln2 + 1];
@@ -93,7 +99,7 @@ CowString& CowString::operator+=(const CowString& other) {
 }
 
 CowString CowString::operator+(std::string_view other) const {
-//    std::cout << "cow + SV" << std::endl;
+    //    std::cout << "cow + SV" << std::endl;
     CowString tmp_str;
     auto ln1 = strlen(mystr_->GetStr());
     char* str = new char[ln1 + other.size() + 1];
@@ -108,7 +114,7 @@ CowString CowString::operator+(std::string_view other) const {
 }
 
 CowString& CowString::operator+=(std::string_view other) {
-//    std::cout << "cow += SV" << std::endl;
+    //    std::cout << "cow += SV" << std::endl;
     auto ln1 = strlen(mystr_->GetStr());
     char* str = new char[ln1 + other.size() + 1];
     for (size_t i = 0; i < ln1; ++i) {
@@ -127,7 +133,7 @@ CowString& CowString::operator+=(std::string_view other) {
 }
 
 bool CowString::operator==(std::string_view other) const {
-//    std::cout << "SV comparison" << std::endl;
+    //    std::cout << "SV comparison" << std::endl;
     auto ln = strlen(mystr_->GetStr());
     if (ln != other.size()) {
         return false;
