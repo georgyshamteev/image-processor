@@ -295,7 +295,7 @@ size_t CowString::MyString::GetCnt() const {
     return cnt_;
 }
 void CowString::MyString::SetStr(char* ch) {
-    //    delete[] str_;
+    delete[] str_;
     str_ = ch;
 }
 
