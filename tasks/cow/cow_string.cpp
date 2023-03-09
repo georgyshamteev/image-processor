@@ -31,9 +31,9 @@ CowString::~CowString() {
 }
 
 CowString& CowString::operator=(const CowString& rhs) {
-//    if (!mystr_->Empty()) {
-//        mystr_->Dec();
-//    }
+    if (!mystr_->Empty()) {
+        mystr_->Dec();
+    }
     if (mystr_->GetCnt() < 1) {
         delete mystr_;
     }
@@ -44,9 +44,9 @@ CowString& CowString::operator=(const CowString& rhs) {
 }
 
 CowString& CowString::operator=(CowString&& rhs) {
-//    if (!mystr_->Empty()) {
-//        mystr_->Dec();
-//    }
+    if (!mystr_->Empty()) {
+        mystr_->Dec();
+    }
     if (mystr_->GetCnt() < 1) {
         delete[] mystr_;
     }
@@ -194,6 +194,7 @@ CowString::ConstMyIterator CowString::end() const {
 //// iterators:
 
 CowString::MyIterator::MyIterator(CowString& link, size_t idx) : cow_link_(link) {
+    link.mystr_->Inc();
     cow_link_ = link;
     this->cow_link_.mystr_->Dec();
     index_ = idx;
@@ -316,6 +317,7 @@ void CowString::MyString::SetStr(char* ch) {
 
 CowString::MyIterator::Proxy::Proxy(char* ch, CowString& dad) : cow_link_(dad) {
     proxy_ch_ = ch;
+    dad.mystr_->Inc();
     cow_link_ = dad;
     this->cow_link_.mystr_->Dec();
 }
