@@ -114,7 +114,7 @@ C[x][y] =
 Дополнительно надо сделать один собственный фильтр.
 
 Фильтр должен быть нетривиальным. Идеи можно взять
-[здесь](https://developer.apple.com/library/mac/documentation/graphicsimaging/reference/CoreImageFilterReference/Reference/reference.html).
+[здесь](https://developer.apple.com/library/mac/documentation/graphicsimaging/Reference/CoreImageFilterReference/Reference/Reference.html).
 
 Хорошие примеры: [Crystallize](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CICrystallize), [Glass Distortion](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html#//apple_ref/doc/filter/ci/CIGlassDistortion).
 
