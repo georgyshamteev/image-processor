@@ -52,9 +52,7 @@ void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
 
 //// CROP
 
-Crop::Crop(size_t width, size_t height) {
-    width_ = width;
-    height_ = height;
+Crop::Crop(size_t width, size_t height) : width_(width), height_(height) {
 }
 
 void Crop::ApplyFilter(Bitmap& bmp) {
@@ -94,6 +92,7 @@ void Sharpening::ApplyFilter(Bitmap& bmp) {
 
 //// Edge Detection
 
+
 void EdgeDetection::ApplyFilter(Bitmap& bmp) {
     const u_char upper_bound = 255;
     Grayscale gs = Grayscale();
@@ -108,4 +107,6 @@ void EdgeDetection::ApplyFilter(Bitmap& bmp) {
             }
         }
     }
+}
+EdgeDetection::EdgeDetection(double threshold) : threshold_(threshold) {
 }

@@ -9,7 +9,7 @@ public:
     virtual void ApplyFilter(Bitmap& bmp) = 0;
 };
 
-class Crop : BasicFilter {
+class Crop : public BasicFilter {
 public:
     Crop(size_t width, size_t height);
     void ApplyFilter(Bitmap& bmp);
@@ -19,7 +19,7 @@ private:
     size_t height_;
 };
 
-class Grayscale : BasicFilter {
+class Grayscale : public BasicFilter {
 public:
     void ApplyFilter(Bitmap& bmp) override;
 
@@ -29,21 +29,21 @@ private:
     const double b_coeff_ = 0.114;
 };
 
-class Negative : BasicFilter {
+class Negative : public BasicFilter {
 public:
     void ApplyFilter(Bitmap& bmp) override;
 private:
     const u_char pxsize_ = 255;
 };
 
-class Sharpening : BasicFilter {
+class Sharpening : public BasicFilter {
 public:
     void ApplyFilter(Bitmap& bmp) override;
 private:
     const std::vector<int> kernel_ = {0, -1, 0, -1, 5, -1, 0, -1, 0};
 };
 
-class EdgeDetection : BasicFilter {
+class EdgeDetection : public BasicFilter {
 public:
     EdgeDetection(double threshold);
     void ApplyFilter(Bitmap& bmp) override;
