@@ -9,7 +9,7 @@ BasicFilter* MakeCrop(const FilterDescriptors& fd) {
     }
     const std::string width = {fd.parameters[0].begin(), fd.parameters[0].end()};
     const std::string height = {fd.parameters[1].begin(), fd.parameters[1].end()};
-    return new Crop(std::stoi(width), std::stoi(height));
+    return new Crop(std::stoll(width), std::stoll(height));
 }
 
 BasicFilter* MakeGrayScale(const FilterDescriptors& fd) {
