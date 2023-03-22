@@ -7,6 +7,9 @@ void Application::Run() {
     Parser parser;
     parser.Parse(argc_, argv_);
     Bitmap bm;
+
+    std::string s(parser.GetInputFileName());
+
     bm.ReadBmp(static_cast<std::string>(parser.GetInputFileName()));
     Pipeline pipeline(parser.GetFilterDescriptors());
     std::vector<std::shared_ptr<BasicFilter>> pipe = pipeline.GetPipeline();

@@ -60,6 +60,12 @@ Crop::Crop(size_t width, size_t height) : width_(width), height_(height) {
 }
 
 void Crop::ApplyFilter(Bitmap& bmp) {
+    if (height_ > bmp.GetRowsNum()) {
+        height_ = bmp.GetRowsNum();
+    }
+    if (width_ > bmp.GetColsNum()) {
+        width_ = bmp.GetColsNum();
+    }
     bmp.Resize(height_, width_);
     bmp.SetWidthHeight(static_cast<int32_t>(width_), static_cast<int32_t>(height_));
 }

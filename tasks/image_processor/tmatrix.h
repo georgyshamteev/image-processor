@@ -102,7 +102,7 @@ public:
 
     TMatrix(const TMatrix<T>&) = delete;
 
-    explicit TMatrix(size_t rows_num, size_t cols_num, T def = T{}) {
+    TMatrix(size_t rows_num, size_t cols_num, T def = T{}) {
         if (rows_num == 0 && cols_num == 0) {
             rows_num_ = 0;
             cols_num_ = 0;
@@ -168,13 +168,6 @@ public:
         if (new_row_num == 0 || new_col_num == 0) {
             throw std::invalid_argument("Can't make matrix with 0 rows or columns");
         }
-        //        if (new_col_num > this->cols_num_) {
-        //            new_col_num = cols_num_;
-        //        }
-        //
-        //        if (new_row_num > this->rows_num_) {
-        //            new_row_num = rows_num_;
-        //        }
 
         T* new_table = AllocateMatrix(new_row_num, new_col_num);
         for (size_t i = 0; i < new_row_num; ++i) {
