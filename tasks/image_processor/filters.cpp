@@ -4,9 +4,9 @@
 //// CAST_FUNC
 
 void CastRgb(double r, double g, double b, Bitmap::Pixel& px) {
-    px.b = static_cast<char>(b);
-    px.g = static_cast<char>(g);
-    px.r = static_cast<char>(r);
+    px.b = static_cast<u_char>(b);
+    px.g = static_cast<u_char>(g);
+    px.r = static_cast<u_char>(r);
 }
 
 //// APPLY MATRIX
