@@ -8,7 +8,7 @@ void Bitmap::ReadBmp(const std::string& filename) {
 
     // открываем BMP файл для чтения бинарных данных
     std::ifstream file;
-    file.open(filename, std::ios::binary);
+    file.open(filename, std::ios_base::in | std::ios_base::binary);
 
     if (!file.is_open()) {
         std::cerr << "Could not open file: " << filename << std::endl;
@@ -104,7 +104,7 @@ void Bitmap::WriteBmp(const std::string& filename) {
 
     // открываем BMP файл для записи бинарных данных
     std::ofstream file;
-    file.open(filename, std::ios::binary);
+    file.open(filename, std::ios_base::out | std::ios_base::binary);
     if (!file.is_open()) {
         std::cerr << "Could not open file: " << filename << std::endl;
         return;
@@ -138,4 +138,8 @@ void Bitmap::WriteBmp(const std::string& filename) {
 
     // закрываем файл и возвращаем результат
     file.close();
+}
+void Bitmap::SetWidthHeight(int32_t w, int32_t h) {
+    bmp_info_.height = h;
+    bmp_info_.width = w;
 }

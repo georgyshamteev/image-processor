@@ -18,8 +18,8 @@ std::vector<Bitmap::Pixel> GetNeighbours(size_t ii, size_t jj, Bitmap& bmp) {
     const ssize_t lower_bound = 0;
     for (int h = -1; h < 2; ++h) {
         for (int w = -1; w < 2; ++w) {
-            result.emplace_back(bmp(std::min(lower_bound, std::max(static_cast<ssize_t>(bmp.GetRowsNum()), i + h)),
-                                    std::min(lower_bound, std::max(static_cast<ssize_t>(bmp.GetColsNum()), j + w))));
+            result.emplace_back(bmp(std::max(lower_bound, std::min(static_cast<ssize_t>(bmp.GetRowsNum()), i + h)),
+                                    std::max(lower_bound, std::min(static_cast<ssize_t>(bmp.GetColsNum()), j + w))));
         }
     }
     return result;
@@ -27,7 +27,7 @@ std::vector<Bitmap::Pixel> GetNeighbours(size_t ii, size_t jj, Bitmap& bmp) {
 
 template <typename T>
 void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
-    const double upper_bound = 255;
+    const int upper_bound = 255;
     TMatrix<Bitmap::Pixel> new_bmp(bmp.GetRowsNum(), bmp.GetColsNum());
 
     for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
@@ -37,17 +37,21 @@ void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
             T res_g = 0;
             T res_b = 0;
             for (size_t idx = 0; idx < nbrs.size(); ++idx) {
-                res_r += static_cast<double>(nbrs[idx].r) / upper_bound * kernel[idx];
-                res_g += static_cast<double>(nbrs[idx].g) / upper_bound * kernel[idx];
-                res_b += static_cast<double>(nbrs[idx].b) / upper_bound * kernel[idx];
+                res_r += static_cast<double>(nbrs[idx].r) * kernel[idx];
+                res_g += static_cast<double>(nbrs[idx].g) * kernel[idx];
+                res_b += static_cast<double>(nbrs[idx].b) * kernel[idx];
             }
-            new_bmp(i, j).r = static_cast<u_char>(res_r);
-            new_bmp(i, j).g = static_cast<u_char>(res_g);
-            new_bmp(i, j).b = static_cast<u_char>(res_b);
+            new_bmp(i, j).r = static_cast<u_char>(std::max(0, std::min(upper_bound, res_r)));
+            new_bmp(i, j).g = static_cast<u_char>(std::max(0, std::min(upper_bound, res_g)));
+            new_bmp(i, j).b = static_cast<u_char>(std::max(0, std::min(upper_bound, res_b)));
         }
     }
     // might be leak here ??
-    bmp = new_bmp;
+    for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
+        for (size_t j = 0; j < bmp.GetColsNum(); ++j) {
+            bmp(i, j) = new_bmp(i, j);
+        }
+    }
 }
 
 //// CROP
@@ -57,6 +61,9 @@ Crop::Crop(size_t width, size_t height) : width_(width), height_(height) {
 
 void Crop::ApplyFilter(Bitmap& bmp) {
     bmp.Resize(height_, width_);
+    bmp.SetWidthHeight(static_cast<int32_t>(width_), static_cast<int32_t>(height_));
+}
+Crop::~Crop() {
 }
 
 //// GRAYSCALE
@@ -69,6 +76,8 @@ void Grayscale::ApplyFilter(Bitmap& bmp) {
             CastRgb(new_value, new_value, new_value, elem);
         }
     }
+}
+Grayscale::~Grayscale() {
 }
 
 //// NEGATIVE
@@ -83,11 +92,16 @@ void Negative::ApplyFilter(Bitmap& bmp) {
         }
     }
 }
+Negative::~Negative() {
+}
 
 //// Sharpening
 
 void Sharpening::ApplyFilter(Bitmap& bmp) {
     ApplyMatrix(bmp, kernel_);
+}
+
+Sharpening::~Sharpening() {
 }
 
 //// Edge Detection
@@ -109,4 +123,6 @@ void EdgeDetection::ApplyFilter(Bitmap& bmp) {
     }
 }
 EdgeDetection::EdgeDetection(double threshold) : threshold_(threshold) {
+}
+EdgeDetection::~EdgeDetection() {
 }

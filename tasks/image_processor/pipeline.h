@@ -11,7 +11,7 @@ public:
     std::vector<std::shared_ptr<BasicFilter>> GetPipeline();
 
 private:
-    const std::vector<FilterDescriptors>& descriptors_;
+    const std::vector<FilterDescriptors> descriptors_;
 };
 
 #endif  // CPP_HSE_PIPELINE_H

@@ -48,6 +48,8 @@ public:
     Pixel& operator()(size_t i, size_t j);
     Bitmap& operator=(const TMatrix<Pixel>&);
 
+    void SetWidthHeight(int32_t w, int32_t h);
+
 private:
     TMatrix<Pixel> bmp_;
     BmpHeader bmp_header_;
