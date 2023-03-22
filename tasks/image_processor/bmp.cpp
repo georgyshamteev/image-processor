@@ -4,7 +4,6 @@
 
 void Bitmap::ReadBmp(const std::string& filename) {
     const size_t bit_size = 8;
-    system("pwd");
 
     // открываем BMP файл для чтения бинарных данных
     std::ifstream file;
@@ -71,13 +70,10 @@ void Bitmap::ReadBmp(const std::string& filename) {
             file.read(&padding, sizeof(padding));
         }
     }
-
-    // закрываем файл и возвращаем результат
-    file.close();
 }
 
 void Bitmap::Resize(size_t h, size_t w) {
-    bmp_.Resize(h, w);
+    bmp_.Resize(w, h);
 }
 
 size_t Bitmap::GetRowsNum() const {
@@ -135,9 +131,6 @@ void Bitmap::WriteBmp(const std::string& filename) {
             file.write(&padding, sizeof(padding));
         }
     }
-
-    // закрываем файл и возвращаем результат
-    file.close();
 }
 void Bitmap::SetWidthHeight(int32_t w, int32_t h) {
     bmp_info_.height = h;

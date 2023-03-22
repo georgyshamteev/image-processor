@@ -8,7 +8,7 @@
 class Pipeline {
 public:
     explicit Pipeline(const std::vector<FilterDescriptors>& descriptors);
-    std::vector<std::shared_ptr<BasicFilter>> GetPipeline();
+    std::vector<std::unique_ptr<BasicFilter>> CreatePipeline();
 
 private:
     const std::vector<FilterDescriptors> descriptors_;

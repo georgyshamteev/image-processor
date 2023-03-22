@@ -7,8 +7,7 @@
 
 class Bitmap {
 public:
-    Bitmap() : bmp_() {
-    }
+    Bitmap() = default;
 
     // структура для хранения заголовка BMP
     struct BmpHeader {
@@ -51,7 +50,7 @@ public:
     void SetWidthHeight(int32_t w, int32_t h);
 
 private:
-    TMatrix<Pixel> bmp_;
+    TMatrix<Pixel> bmp_ = {};
     BmpHeader bmp_header_;
     BmpInfo bmp_info_;
 };

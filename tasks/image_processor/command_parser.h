@@ -14,7 +14,7 @@ public:
     bool Parse(int argc, char* argv[]);
     std::string_view GetOutputFileName() const;
     std::string_view GetInputFileName() const;
-    const std::vector<FilterDescriptors> GetFilterDescriptors() const;
+    const std::vector<FilterDescriptors>& GetFilterDescriptors() const;
 
 private:
     std::string_view input_file_name_;

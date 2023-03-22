@@ -4,24 +4,26 @@
 #include "filters.h"
 #include "command_parser.h"
 #include <map>
-
-using ProducedFilter = BasicFilter* (*)(const FilterDescriptors&);
+#include <memory>
 
 namespace filter_producing_functions {
 
-BasicFilter* MakeCrop(const FilterDescriptors& fd);
-BasicFilter* MakeGrayScale(const FilterDescriptors& fd);
-BasicFilter* MakeNegative(const FilterDescriptors& fd);
-BasicFilter* MakeSharpening(const FilterDescriptors& fd);
-BasicFilter* MakeEdgeDetection(const FilterDescriptors& fd);
-BasicFilter* MakeGaussianBlur(const FilterDescriptors& fd);
+std::unique_ptr<BasicFilter> MakeCrop(const FilterDescriptors& fd);
+std::unique_ptr<BasicFilter> MakeGrayScale(const FilterDescriptors& fd);
+std::unique_ptr<BasicFilter> MakeNegative(const FilterDescriptors& fd);
+std::unique_ptr<BasicFilter> MakeSharpening(const FilterDescriptors& fd);
+std::unique_ptr<BasicFilter> MakeEdgeDetection(const FilterDescriptors& fd);
+std::unique_ptr<BasicFilter> MakeGaussianBlur(const FilterDescriptors& fd);
 
 }  // namespace filter_producing_functions
 
 class FilterProducing {
+    using Signature = std::unique_ptr<BasicFilter>(const FilterDescriptors&);
+    using ProducedFilter = Signature*;
+
 public:
     FilterProducing();
-    ProducedFilter GetFilter(const FilterDescriptors& fd);
+    std::unique_ptr<BasicFilter> GetFilter(const FilterDescriptors& fd);
 
 private:
     std::map<std::string_view, ProducedFilter> pipeline_;

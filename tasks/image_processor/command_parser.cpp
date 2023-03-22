@@ -6,7 +6,7 @@ std::string_view Parser::GetOutputFileName() const {
 std::string_view Parser::GetInputFileName() const {
     return input_file_name_;
 }
-const std::vector<FilterDescriptors> Parser::GetFilterDescriptors() const {
+const std::vector<FilterDescriptors>& Parser::GetFilterDescriptors() const {
     return filter_descriptors_;
 }
 

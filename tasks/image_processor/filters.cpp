@@ -1,6 +1,7 @@
 #include "filters.h"
 #include "vector"
 
+namespace {
 //// CAST_FUNC
 
 void CastRgb(double r, double g, double b, Bitmap::Pixel& px) {
@@ -46,14 +47,13 @@ void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
             new_bmp(i, j).b = static_cast<u_char>(std::max(0, std::min(upper_bound, res_b)));
         }
     }
-    // might be leak here ??
     for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
         for (size_t j = 0; j < bmp.GetColsNum(); ++j) {
             bmp(i, j) = new_bmp(i, j);
         }
     }
 }
-
+}  // namespace
 //// CROP
 
 Crop::Crop(size_t width, size_t height) : width_(width), height_(height) {

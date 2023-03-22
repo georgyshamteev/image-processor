@@ -7,7 +7,7 @@
 class BasicFilter {
 public:
     virtual void ApplyFilter(Bitmap& bmp) = 0;
-    virtual ~BasicFilter(){};
+    virtual ~BasicFilter() = default;
 };
 
 class Crop : public BasicFilter {
