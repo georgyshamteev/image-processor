@@ -106,7 +106,6 @@ Sharpening::~Sharpening() {
 
 //// Edge Detection
 
-
 void EdgeDetection::ApplyFilter(Bitmap& bmp) {
     const u_char upper_bound = 255;
     Grayscale gs = Grayscale();

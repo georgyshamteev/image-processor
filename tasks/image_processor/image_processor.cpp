@@ -5,7 +5,7 @@
 #include "filter_producing.h"
 #include "application.h"
 
-void Test1(int argc, char*argv[]) {
+void Test1(int argc, char* argv[]) {
     Parser parser;
     parser.Parse(argc, argv);
 }
@@ -24,7 +24,6 @@ void Test3(int argc, char* argv[]) {
     bm.ReadBmp(static_cast<std::string>(parser.GetInputFileName()));
     bm.WriteBmp(static_cast<std::string>(parser.GetOutputFileName()));
 }
-
 
 int main(int argc, char** argv) {
     Application app(argc, argv);

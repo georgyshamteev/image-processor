@@ -9,14 +9,12 @@ std::string_view Parser::GetInputFileName() const {
 const std::vector<FilterDescriptors> Parser::GetFilterDescriptors() const {
     return filter_descriptors_;
 }
-//auto Parser::Parse(int argc, char **argv) {
-//
-//    return 0;
-//}
 
 bool Parser::Parse(int argc, char* argv[]) {
     if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " input_file output_file [-filter1 param1_1 param1_2 ...] [-filter2 param2_1 param2_2 ...] ..." << std::endl;
+        std::cerr << "Usage: " << argv[0]
+                  << " input_file output_file [-filter1 param1_1 param1_2 ...] [-filter2 param2_1 param2_2 ...] ..."
+                  << std::endl;
         return false;
     }
     number_of_parameters_ = argc - 1;
@@ -51,7 +49,7 @@ bool Parser::Parse(int argc, char* argv[]) {
                 j++;
             }
             filter_descriptors_.push_back(filter_desc);
-//            i = j - 1;
+            //            i = j - 1;
         }
     }
 

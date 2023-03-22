@@ -36,6 +36,7 @@ class Negative : public BasicFilter {
 public:
     ~Negative() override;
     void ApplyFilter(Bitmap& bmp) override;
+
 private:
     const u_char pxsize_ = 255;
 };
@@ -44,6 +45,7 @@ class Sharpening : public BasicFilter {
 public:
     ~Sharpening() override;
     void ApplyFilter(Bitmap& bmp) override;
+
 private:
     const std::vector<int> kernel_ = {0, -1, 0, -1, 5, -1, 0, -1, 0};
 };
@@ -53,6 +55,7 @@ public:
     ~EdgeDetection() override;
     explicit EdgeDetection(double threshold);
     void ApplyFilter(Bitmap& bmp) override;
+
 private:
     const std::vector<int> kernel_ = {0, -1, 0, -1, 4, -1, 0, -1, 0};
     const double threshold_;

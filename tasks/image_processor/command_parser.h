@@ -5,8 +5,8 @@
 #include <vector>
 
 struct FilterDescriptors {
-        std::string_view name;
-        std::vector<std::string_view> parameters;
+    std::string_view name;
+    std::vector<std::string_view> parameters;
 };
 
 class Parser {
@@ -15,6 +15,7 @@ public:
     std::string_view GetOutputFileName() const;
     std::string_view GetInputFileName() const;
     const std::vector<FilterDescriptors> GetFilterDescriptors() const;
+
 private:
     std::string_view input_file_name_;
     std::string_view output_file_name_;

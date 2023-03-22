@@ -9,12 +9,12 @@ using ProducedFilter = BasicFilter* (*)(const FilterDescriptors&);
 
 namespace filter_producing_functions {
 
-    BasicFilter* MakeCrop(const FilterDescriptors& fd);
-    BasicFilter* MakeGrayScale(const FilterDescriptors& fd);
-    BasicFilter* MakeNegative(const FilterDescriptors& fd);
-    BasicFilter* MakeSharpening(const FilterDescriptors& fd);
-    BasicFilter* MakeEdgeDetection(const FilterDescriptors& fd);
-    BasicFilter* MakeGaussianBlur(const FilterDescriptors& fd);
+BasicFilter* MakeCrop(const FilterDescriptors& fd);
+BasicFilter* MakeGrayScale(const FilterDescriptors& fd);
+BasicFilter* MakeNegative(const FilterDescriptors& fd);
+BasicFilter* MakeSharpening(const FilterDescriptors& fd);
+BasicFilter* MakeEdgeDetection(const FilterDescriptors& fd);
+BasicFilter* MakeGaussianBlur(const FilterDescriptors& fd);
 
 }  // namespace filter_producing_functions
 

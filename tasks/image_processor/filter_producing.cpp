@@ -48,12 +48,11 @@ BasicFilter* MakeGaussianBlur(const FilterDescriptors& fd) {
 //// CREATING MAP
 
 FilterProducing::FilterProducing() {
-    pipeline_["crop"]  = &MakeCrop;
-    pipeline_["gs"]    = &MakeGrayScale;
-    pipeline_["neg"]   = &MakeNegative;
+    pipeline_["crop"] = &MakeCrop;
+    pipeline_["gs"] = &MakeGrayScale;
+    pipeline_["neg"] = &MakeNegative;
     pipeline_["sharp"] = &MakeSharpening;
-    pipeline_["edge"]  = &MakeEdgeDetection;
-
+    pipeline_["edge"] = &MakeEdgeDetection;
 }
 
 //// GET FUNCTION

@@ -1,6 +1,6 @@
 #include "application.h"
 
-Application::Application(int argc, char **argv) : argc_(argc), argv_(argv) {
+Application::Application(int argc, char** argv) : argc_(argc), argv_(argv) {
 }
 
 void Application::Run() {
