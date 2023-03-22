@@ -1,14 +1,13 @@
-#ifndef CPP_HSE_FILTER_PIPELINE_H
-#define CPP_HSE_FILTER_PIPELINE_H
+#ifndef CPP_HSE_FILTER_PRODUCING_H
+#define CPP_HSE_FILTER_PRODUCING_H
 
 #include "filters.h"
 #include "command_parser.h"
-
 #include <map>
 
-class Pipeline {
-public:
-    Pipeline();
+using ProducedFilter = BasicFilter* (*)(const FilterDescriptors&);
+
+namespace filter_producing_functions {
 
     BasicFilter* MakeCrop(const FilterDescriptors& fd);
     BasicFilter* MakeGrayScale(const FilterDescriptors& fd);
@@ -17,8 +16,15 @@ public:
     BasicFilter* MakeEdgeDetection(const FilterDescriptors& fd);
     BasicFilter* MakeGaussianBlur(const FilterDescriptors& fd);
 
+}  // namespace filter_producing_functions
+
+class FilterProducing {
+public:
+    FilterProducing();
+    ProducedFilter GetFilter(const FilterDescriptors& fd);
+
 private:
-    std::map<std::string, BasicFilter* (Pipeline::*)(const FilterDescriptors&)> pipeline_;
+    std::map<std::string_view, ProducedFilter> pipeline_;
 };
 
-#endif  // CPP_HSE_FILTER_PIPELINE_H
+#endif  // CPP_HSE_FILTER_PRODUCING_H

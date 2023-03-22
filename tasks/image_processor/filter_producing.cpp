@@ -1,7 +1,9 @@
-#include "filter_pipeline.h"
+#include "filter_producing.h"
 #include <string>
 
-BasicFilter* Pipeline::MakeCrop(const FilterDescriptors& fd) {
+//// MAKE FUNCTIONS
+
+BasicFilter* MakeCrop(const FilterDescriptors& fd) {
     if (fd.parameters.size() != 2) {
         throw std::invalid_argument("Wrong number of arguments. Crop only takes 2 arguments.");
     }
@@ -10,28 +12,28 @@ BasicFilter* Pipeline::MakeCrop(const FilterDescriptors& fd) {
     return new Crop(std::stoi(width), std::stoi(height));
 }
 
-BasicFilter* Pipeline::MakeGrayScale(const FilterDescriptors& fd) {
+BasicFilter* MakeGrayScale(const FilterDescriptors& fd) {
     if (!fd.parameters.empty()) {
         throw std::invalid_argument("Grayscale doesn`t take any arguments. Consider deleting all arguments.");
     }
     return new Grayscale;
 }
 
-BasicFilter* Pipeline::MakeNegative(const FilterDescriptors& fd) {
+BasicFilter* MakeNegative(const FilterDescriptors& fd) {
     if (!fd.parameters.empty()) {
         throw std::invalid_argument("Negative doesn`t take any arguments. Consider deleting all arguments.");
     }
     return new Negative;
 }
 
-BasicFilter* Pipeline::MakeSharpening(const FilterDescriptors& fd) {
+BasicFilter* MakeSharpening(const FilterDescriptors& fd) {
     if (!fd.parameters.empty()) {
         throw std::invalid_argument("Sharpening doesn`t take any arguments. Consider deleting all arguments.");
     }
     return new Sharpening;
 }
 
-BasicFilter* Pipeline::MakeEdgeDetection(const FilterDescriptors& fd) {
+BasicFilter* MakeEdgeDetection(const FilterDescriptors& fd) {
     if (fd.parameters.size() != 1) {
         throw std::invalid_argument("Wrong number of arguments. EdgeDetection only takes 1 argument.");
     }
@@ -39,15 +41,23 @@ BasicFilter* Pipeline::MakeEdgeDetection(const FilterDescriptors& fd) {
     return new EdgeDetection(std::stod(threshold));
 }
 
-BasicFilter* Pipeline::MakeGaussianBlur(const FilterDescriptors& fd) {
+BasicFilter* MakeGaussianBlur(const FilterDescriptors& fd) {
     return nullptr;
 }
 
-Pipeline::Pipeline() {
-    pipeline_["crop"] = &Pipeline::MakeCrop;
-    pipeline_["gs"] = &Pipeline::MakeGrayScale;
-    pipeline_["neg"] = &Pipeline::MakeNegative;
-    pipeline_["sharp"] = &Pipeline::MakeSharpening;
-    pipeline_["edge"] = &Pipeline::MakeEdgeDetection;
+//// CREATING MAP
 
+FilterProducing::FilterProducing() {
+    pipeline_["crop"]  = &MakeCrop;
+    pipeline_["gs"]    = &MakeGrayScale;
+    pipeline_["neg"]   = &MakeNegative;
+    pipeline_["sharp"] = &MakeSharpening;
+    pipeline_["edge"]  = &MakeEdgeDetection;
+
+}
+
+//// GET FUNCTION
+
+ProducedFilter FilterProducing::GetFilter(const FilterDescriptors& fd) {
+    return pipeline_[fd.name];
 }

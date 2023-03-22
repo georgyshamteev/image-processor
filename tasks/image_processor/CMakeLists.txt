@@ -6,7 +6,7 @@ add_executable(
         command_parser.h
         bmp.cpp
         bmp.h
-        test.cpp filters.cpp filters.h filter_pipeline.cpp filter_pipeline.h)
+        test.cpp filters.cpp filters.h filter_producing.cpp filter_producing.h pipeline.cpp pipeline.h)
 
 add_catch(
         unit_test

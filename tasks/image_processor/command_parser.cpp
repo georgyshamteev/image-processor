@@ -6,8 +6,8 @@ std::string_view Parser::GetOutputFileName() const {
 std::string_view Parser::GetInputFileName() const {
     return input_file_name_;
 }
-size_t Parser::GetNumberOfParameters() const {
-    return number_of_parameters_;
+const std::vector<FilterDescriptors> Parser::GetFilterDescriptors() const {
+    return filter_descriptors_;
 }
 //auto Parser::Parse(int argc, char **argv) {
 //
