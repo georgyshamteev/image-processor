@@ -50,7 +50,7 @@ void Bitmap::ReadBmp(const std::string& filename) {
     int32_t width = info.width;
     int32_t height = info.height;
 
-    bmp_.Resize(height, width);
+    bmp_.Resize(width, height);
 
     // считываем пиксели в память
     for (int32_t y = height - 1; y >= 0; --y) {

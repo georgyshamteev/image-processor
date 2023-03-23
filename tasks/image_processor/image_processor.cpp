@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
         Application app(argc, argv);
         app.Run();
     } catch (const std::exception& e) {
-        std::cerr << "here" << std::endl;
+        std::cerr << e.what() << std::endl;
         return 0;
     }
 }

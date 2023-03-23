@@ -107,7 +107,7 @@ public:
             rows_num_ = 0;
             cols_num_ = 0;
             table_ = nullptr;
-            return;
+            throw std::invalid_argument("Can't make matrix with 0 rows or columns");
         }
 
         if (rows_num == 0 || cols_num == 0) {
@@ -163,9 +163,10 @@ public:
     void Resize(size_t new_col_num, size_t new_row_num, T def = T{}) {
         if (new_col_num == 0 && new_row_num == 0) {
             Clear();
-            return;
+            throw std::invalid_argument("Can't make matrix with 0 rows or columns");;
         }
         if (new_row_num == 0 || new_col_num == 0) {
+            Clear();
             throw std::invalid_argument("Can't make matrix with 0 rows or columns");
         }
 

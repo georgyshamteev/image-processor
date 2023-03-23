@@ -58,5 +58,9 @@ FilterProducing::FilterProducing() {
 //// GET FUNCTION
 
 std::unique_ptr<BasicFilter> FilterProducing::GetFilter(const FilterDescriptors& fd) {
+    auto it = pipeline_.find(fd.name);
+    if (it == pipeline_.end()) {
+        throw std::invalid_argument("wrong filter name");
+    }
     return (pipeline_[fd.name])(fd);
 }
