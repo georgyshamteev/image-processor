@@ -66,6 +66,7 @@ public:
     ~GaussianBlur() override;
     explicit GaussianBlur(double sigma);
     void ApplyFilter(Bitmap& bmp) override;
+
 private:
     int32_t sigma_;
 };
