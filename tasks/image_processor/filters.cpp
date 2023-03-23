@@ -155,28 +155,35 @@ GaussianBlur::GaussianBlur(double sigma) : sigma_(std::ceil(sigma)) {
 
 void GaussianBlur::ApplyFilter(Bitmap& bmp) {
     const int coeffs_size_half = static_cast<int>(coeffs_.size() / 2);
-    //    const int32_t up = 255;
     TMatrix<Bitmap::Pixel> new_bitmap;
     new_bitmap.Resize(bmp.GetColsNum(), bmp.GetRowsNum());
 
     for (size_t x = 0; x < bmp.GetColsNum(); ++x) {
         for (size_t y = 0; y < bmp.GetRowsNum(); ++y) {
             Bitmap::Pixel& pixel = new_bitmap(y, x);
+            double sum = 0;
             for (int dy = -coeffs_size_half; dy <= coeffs_size_half; ++dy) {
                 int32_t yy =
                     std::max(0, std::min(static_cast<int32_t>(bmp.GetRowsNum() - 1), static_cast<int32_t>(y) + dy));
-
+                sum += coeffs_[dy + coeffs_size_half];
                 pixel.r += static_cast<u_char>(static_cast<double>(bmp(yy, x).r) * coeffs_[dy + coeffs_size_half]);
                 pixel.g += static_cast<u_char>(static_cast<double>(bmp(yy, x).g) * coeffs_[dy + coeffs_size_half]);
                 pixel.b += static_cast<u_char>(static_cast<double>(bmp(yy, x).b) * coeffs_[dy + coeffs_size_half]);
             }
+            pixel.r = static_cast<u_char>(static_cast<double>(pixel.r) / sum);
+            pixel.g = static_cast<u_char>(static_cast<double>(pixel.g) / sum);
+            pixel.b = static_cast<u_char>(static_cast<double>(pixel.b) / sum);
         }
     }
 
     for (size_t y = 0; y < bmp.GetRowsNum(); ++y) {
         for (size_t x = 0; x < bmp.GetColsNum(); ++x) {
             Bitmap::Pixel& pixel = bmp(y, x) = {};
+            double sum = 0;
+
             for (int dx = -coeffs_size_half; dx <= coeffs_size_half; ++dx) {
+                sum += coeffs_[dx + coeffs_size_half];
+
                 int32_t xx =
                     std::max(0, std::min(static_cast<int32_t>(bmp.GetColsNum() - 1), static_cast<int32_t>(x) + dx));
                 pixel.r +=
@@ -186,6 +193,9 @@ void GaussianBlur::ApplyFilter(Bitmap& bmp) {
                 pixel.b +=
                     static_cast<u_char>(static_cast<double>(new_bitmap(y, xx).b) * coeffs_[dx + coeffs_size_half]);
             }
+            pixel.r = static_cast<u_char>(static_cast<double>(pixel.r) / sum);
+            pixel.g = static_cast<u_char>(static_cast<double>(pixel.g) / sum);
+            pixel.b = static_cast<u_char>(static_cast<double>(pixel.b) / sum);
         }
     }
 
