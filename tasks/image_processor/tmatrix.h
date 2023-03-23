@@ -163,7 +163,7 @@ public:
     void Resize(size_t new_col_num, size_t new_row_num, T def = T{}) {
         if (new_col_num == 0 && new_row_num == 0) {
             Clear();
-            throw std::invalid_argument("Can't make matrix with 0 rows or columns");;
+            throw std::invalid_argument("Can't make matrix with 0 rows or columns");
         }
         if (new_row_num == 0 || new_col_num == 0) {
             Clear();
