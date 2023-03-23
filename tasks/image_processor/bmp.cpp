@@ -11,7 +11,7 @@ void Bitmap::ReadBmp(const std::string& filename) {
 
     if (!file.is_open()) {
         std::cerr << "Could not open file: " << filename << std::endl;
-        return;
+        throw std::invalid_argument("Bad file");
     }
 
     // считываем заголовок BMP
@@ -27,23 +27,23 @@ void Bitmap::ReadBmp(const std::string& filename) {
     // проверяем, что BMP подходящего формата
     if (header.signature[0] != 'B' || header.signature[1] != 'M') {
         std::cerr << "Not a BMP file: " << filename << std::endl;
-        return;
+        throw std::invalid_argument("Bad file");
     }
     if (info.info_size != sizeof(BmpInfo)) {
         std::cerr << "Invalid BMP format: " << filename << std::endl;
-        return;
+        throw std::invalid_argument("Bad file");
     }
     if (info.bit_count != 3 * bit_size) {
         std::cerr << "Only 24-bit BMPs are supported: " << filename << std::endl;
-        return;
+        throw std::invalid_argument("Bad file");
     }
     if (info.compression != 0) {
         std::cerr << "Compressed BMPs are not supported: " << filename << std::endl;
-        return;
+        throw std::invalid_argument("Bad file");
     }
     if (info.colors_used != 0 || info.colors_important != 0) {
         std::cerr << "BMPs with color tables are not supported: " << filename << std::endl;
-        return;
+        throw std::invalid_argument("Bad file");
     }
 
     // выделяем память для хранения пикселей
