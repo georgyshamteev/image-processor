@@ -16,11 +16,13 @@ std::vector<Bitmap::Pixel> GetNeighbours(size_t ii, size_t jj, Bitmap& bmp) {
     std::vector<Bitmap::Pixel> result;
     ssize_t i = static_cast<ssize_t>(ii);
     ssize_t j = static_cast<ssize_t>(jj);
-    const ssize_t lower_bound = 0;
+    ssize_t height = static_cast<ssize_t>(bmp.GetRowsNum());
+    ssize_t width = static_cast<ssize_t>(bmp.GetColsNum());
+    const ssize_t lower = 0;
     for (int h = -1; h < 2; ++h) {
         for (int w = -1; w < 2; ++w) {
-            result.emplace_back(bmp(std::max(lower_bound, std::min(static_cast<ssize_t>(bmp.GetRowsNum()), i + h)),
-                                    std::max(lower_bound, std::min(static_cast<ssize_t>(bmp.GetColsNum()), j + w))));
+            result.emplace_back(
+                bmp(std::max(lower, std::min(height - 1, i + h)), std::max(lower, std::min(width - 1, j + w))));
         }
     }
     return result;
@@ -119,7 +121,8 @@ void EdgeDetection::ApplyFilter(Bitmap& bmp) {
     ApplyMatrix(bmp, kernel_);
     for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
         for (size_t j = 0; j < bmp.GetColsNum(); ++j) {
-            if (bmp(i, j).r > threshold_) {
+            auto value = std::min(1.0, std::max(0.0, (static_cast<double>(bmp(i, j).r)) / upper_bound));
+            if (value > threshold_) {
                 bmp(i, j) = Bitmap::Pixel{upper_bound, upper_bound, upper_bound};
             } else {
                 bmp(i, j) = Bitmap::Pixel{0, 0, 0};
