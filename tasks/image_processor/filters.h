@@ -69,6 +69,7 @@ public:
 
 private:
     int32_t sigma_;
+    std::vector<double> coeffs_;
 };
 
 #endif  // CPP_HSE_FILTERS_H

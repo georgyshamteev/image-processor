@@ -42,13 +42,13 @@ void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
             double res_g = 0;
             double res_b = 0;
             for (size_t idx = 0; idx < nbrs.size(); ++idx) {
-                res_r += static_cast<double>(nbrs[idx].r) / upper * kernel[idx];
-                res_g += static_cast<double>(nbrs[idx].g) / upper * kernel[idx];
-                res_b += static_cast<double>(nbrs[idx].b) / upper * kernel[idx];
+                res_r += static_cast<double>(nbrs[idx].r) * kernel[idx];
+                res_g += static_cast<double>(nbrs[idx].g) * kernel[idx];
+                res_b += static_cast<double>(nbrs[idx].b) * kernel[idx];
             }
-            new_bmp(i, j).r = static_cast<u_char>((std::max(lower, std::min(upper, res_r * upper))));
-            new_bmp(i, j).g = static_cast<u_char>((std::max(lower, std::min(upper, res_g * upper))));
-            new_bmp(i, j).b = static_cast<u_char>((std::max(lower, std::min(upper, res_b * upper))));
+            new_bmp(i, j).r = static_cast<u_char>((std::max(lower, std::min(upper, res_r))));
+            new_bmp(i, j).g = static_cast<u_char>((std::max(lower, std::min(upper, res_g))));
+            new_bmp(i, j).b = static_cast<u_char>((std::max(lower, std::min(upper, res_b))));
         }
     }
     for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
@@ -143,30 +143,43 @@ GaussianBlur::~GaussianBlur() {
 }
 
 GaussianBlur::GaussianBlur(double sigma) : sigma_(std::ceil(sigma)) {
-}
-
-double CountGauss(int32_t w, int32_t h, int32_t sigma) {
-    double numenator = std::exp((-pow(w, 2) - pow(h, 2)) / (2 * pow(sigma, 2)));
-    double denumenator = (2 * M_PI * pow(sigma, 2));
-    return numenator / denumenator;
+    const size_t coeffs_size = static_cast<size_t>(std::ceil(6 * std::abs(sigma_))) | 1;
+    const size_t coeffs_size_half = coeffs_size / 2;
+    coeffs_.resize(coeffs_size);
+    for (int dx = 0; dx <= static_cast<int>(coeffs_size_half); ++dx) {
+        coeffs_[coeffs_size_half - dx] = coeffs_[coeffs_size_half + dx] =
+            std::exp(-static_cast<double>(dx * dx) / (2 * sigma_ * sigma_)) /
+            std::sqrt(2 * std::numbers::pi * sigma_ * sigma_);
+    }
 }
 
 void GaussianBlur::ApplyFilter(Bitmap& bmp) {
-    double matrix_sum = 0;
-    std::vector<double> temporary_mat;
+    const int coeffs_size_half = static_cast<int>(coeffs_.size() / 2);
+    const double up = 255;
+    TMatrix<Bitmap::Pixel> new_bitmap(bmp.GetRowsNum(), bmp.GetColsNum());
+    for (size_t x = 0; x < bmp.GetColsNum(); ++x) {
+        for (size_t y = 0; y < bmp.GetRowsNum(); ++y) {
+            Bitmap::Pixel& pixel = new_bitmap(y, x);
+            for (int dy = -coeffs_size_half; dy <= coeffs_size_half; ++dy) {
+                pixel.r +=
+                    static_cast<u_char>(static_cast<double>(bmp(y + dy, x).r) / up * coeffs_[dy + coeffs_size_half]);
+                pixel.g +=
+                    static_cast<u_char>(static_cast<double>(bmp(y + dy, x).g) / up * coeffs_[dy + coeffs_size_half]);
+                pixel.b +=
+                    static_cast<u_char>(static_cast<double>(bmp(y + dy, x).b) / up * coeffs_[dy + coeffs_size_half]);
+            }
+        }
+    }
 
-    for (int32_t x = -3 * sigma_; x <= 3 * sigma_; ++x) {
-        for (int32_t y = -3 * sigma_; y <= 3 * sigma_; ++y) {
-            double gauss = CountGauss(x, y, sigma_);
-            matrix_sum += gauss;
-            temporary_mat.push_back(gauss);
+    for (size_t y = 0; y < bmp.GetRowsNum(); ++y) {
+        for (size_t x = 0; x < bmp.GetColsNum(); ++x) {
+            Bitmap::Pixel& pixel = bmp(y, x) = {};
+            for (int dx = -coeffs_size_half; dx <= coeffs_size_half; ++dx) {
+                //                pixel += new_bitmap(y, x + dx) * coeffs_[dx + coeffs_size_half];
+                pixel.r += static_cast<u_char>(static_cast<double>(bmp(y, x + dx).r) * coeffs_[dx + coeffs_size_half]);
+                pixel.g += static_cast<u_char>(static_cast<double>(bmp(y, x + dx).g) * coeffs_[dx + coeffs_size_half]);
+                pixel.b += static_cast<u_char>(static_cast<double>(bmp(y, x + dx).b) * coeffs_[dx + coeffs_size_half]);
+            }
         }
     }
-    int32_t size = std::ceil(std::sqrt(temporary_mat.size()));
-    for (int32_t x = -3 * sigma_; x <= 3 * sigma_; ++x) {
-        for (int32_t y = -3 * sigma_; y <= 3 * sigma_; ++y) {
-            temporary_mat[(x + 3 * sigma_) * size + (y + 3 * sigma_)] /= matrix_sum;
-        }
-    }
-    ApplyMatrix(bmp, temporary_mat);
 }
