@@ -27,7 +27,6 @@ void Test3(int argc, char* argv[]) {
 
 int main(int argc, char** argv) {
     try {
-
         Application app(argc, argv);
         app.Run();
     } catch (const std::exception& e) {
