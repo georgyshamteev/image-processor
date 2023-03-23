@@ -202,9 +202,9 @@ void GaussianBlur::ApplyFilter(Bitmap& bmp) {
                 b += static_cast<double>(new_bitmap(h, xx).b) * coeffs_[diff + half_gauss_size];
             }
 
-            pixel.r = static_cast<u_char>(r/sum);
-            pixel.g = static_cast<u_char>(g/sum);
-            pixel.b = static_cast<u_char>(b/sum);
+            pixel.r = static_cast<u_char>(r / sum);
+            pixel.g = static_cast<u_char>(g / sum);
+            pixel.b = static_cast<u_char>(b / sum);
         }
     }
 }
