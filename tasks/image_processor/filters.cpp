@@ -143,65 +143,68 @@ GaussianBlur::~GaussianBlur() {
 }
 
 GaussianBlur::GaussianBlur(double sigma) : sigma_(std::ceil(sigma)) {
-    const size_t coeffs_size = static_cast<size_t>(std::ceil(6 * std::abs(sigma_))) | 1;
-    const size_t coeffs_size_half = coeffs_size / 2;
-    coeffs_.resize(coeffs_size);
-    for (int dx = 0; dx <= static_cast<int>(coeffs_size_half); ++dx) {
-        coeffs_[coeffs_size_half - dx] = coeffs_[coeffs_size_half + dx] =
-            std::exp(-static_cast<double>(dx * dx) / (2 * sigma_ * sigma_)) /
-            std::sqrt(2 * std::numbers::pi * sigma_ * sigma_);
+    const size_t gauss_size = static_cast<size_t>(std::ceil(6 * sigma_)) + 1;
+    int32_t half_gauss_size = gauss_size / 2;
+
+    coeffs_.resize(gauss_size);
+
+    for (int32_t i = 0; i <= half_gauss_size; ++i) {
+        double numenator = std::exp(-static_cast<double>(i * i) / (sigma_ * sigma_ * 2));
+        double denumenator = std::sqrt(2 * M_PI * sigma_ * sigma_);
+        coeffs_[half_gauss_size - i] = coeffs_[half_gauss_size + i] = numenator / denumenator;
     }
 }
 
 void GaussianBlur::ApplyFilter(Bitmap& bmp) {
-    const int coeffs_size_half = static_cast<int>(coeffs_.size() / 2);
+    const int32_t half_gauss_size = static_cast<int32_t>(coeffs_.size() / 2);
+
     TMatrix<Bitmap::Pixel> new_bitmap;
     new_bitmap.Resize(bmp.GetColsNum(), bmp.GetRowsNum());
 
-    for (size_t x = 0; x < bmp.GetColsNum(); ++x) {
-        for (size_t y = 0; y < bmp.GetRowsNum(); ++y) {
-            Bitmap::Pixel& pixel = new_bitmap(y, x);
+    for (size_t w = 0; w < bmp.GetColsNum(); ++w) {
+        for (size_t h = 0; h < bmp.GetRowsNum(); ++h) {
+            Bitmap::Pixel& pixel = new_bitmap(h, w);
+            double r = 0;
+            double g = 0;
+            double b = 0;
             double sum = 0;
-            for (int dy = -coeffs_size_half; dy <= coeffs_size_half; ++dy) {
+            for (int diff = -half_gauss_size; diff <= half_gauss_size; ++diff) {
                 int32_t yy =
-                    std::max(0, std::min(static_cast<int32_t>(bmp.GetRowsNum() - 1), static_cast<int32_t>(y) + dy));
-                sum += coeffs_[dy + coeffs_size_half];
-                pixel.r += static_cast<u_char>(static_cast<double>(bmp(yy, x).r) * coeffs_[dy + coeffs_size_half]);
-                pixel.g += static_cast<u_char>(static_cast<double>(bmp(yy, x).g) * coeffs_[dy + coeffs_size_half]);
-                pixel.b += static_cast<u_char>(static_cast<double>(bmp(yy, x).b) * coeffs_[dy + coeffs_size_half]);
+                    std::max(0, std::min(static_cast<int32_t>(bmp.GetRowsNum() - 1), static_cast<int32_t>(h) + diff));
+                sum += coeffs_[diff + half_gauss_size];
+                r += static_cast<double>(bmp(yy, w).r) * coeffs_[diff + half_gauss_size];
+                g += static_cast<double>(bmp(yy, w).g) * coeffs_[diff + half_gauss_size];
+                b += static_cast<double>(bmp(yy, w).b) * coeffs_[diff + half_gauss_size];
             }
-            pixel.r = static_cast<u_char>(static_cast<double>(pixel.r) / sum);
-            pixel.g = static_cast<u_char>(static_cast<double>(pixel.g) / sum);
-            pixel.b = static_cast<u_char>(static_cast<double>(pixel.b) / sum);
+            pixel.r = static_cast<u_char>(r / sum);
+            pixel.g = static_cast<u_char>(g / sum);
+            pixel.b = static_cast<u_char>(b / sum);
         }
     }
 
-    for (size_t y = 0; y < bmp.GetRowsNum(); ++y) {
-        for (size_t x = 0; x < bmp.GetColsNum(); ++x) {
-            Bitmap::Pixel& pixel = bmp(y, x) = {};
+    for (size_t h = 0; h < bmp.GetRowsNum(); ++h) {
+        for (size_t w = 0; w < bmp.GetColsNum(); ++w) {
+
+            Bitmap::Pixel& pixel = bmp(h, w);
+            pixel.r = pixel.g = pixel.b = 0;
+
             double sum = 0;
+            double r = 0;
+            double g = 0;
+            double b = 0;
 
-            for (int dx = -coeffs_size_half; dx <= coeffs_size_half; ++dx) {
-                sum += coeffs_[dx + coeffs_size_half];
-
+            for (int diff = -half_gauss_size; diff <= half_gauss_size; ++diff) {
                 int32_t xx =
-                    std::max(0, std::min(static_cast<int32_t>(bmp.GetColsNum() - 1), static_cast<int32_t>(x) + dx));
-                pixel.r +=
-                    static_cast<u_char>(static_cast<double>(new_bitmap(y, xx).r) * coeffs_[dx + coeffs_size_half]);
-                pixel.g +=
-                    static_cast<u_char>(static_cast<double>(new_bitmap(y, xx).g) * coeffs_[dx + coeffs_size_half]);
-                pixel.b +=
-                    static_cast<u_char>(static_cast<double>(new_bitmap(y, xx).b) * coeffs_[dx + coeffs_size_half]);
+                    std::max(0, std::min(static_cast<int32_t>(bmp.GetColsNum() - 1), static_cast<int32_t>(w) + diff));
+                sum += coeffs_[diff + half_gauss_size];
+                r += static_cast<double>(new_bitmap(h, xx).r) * coeffs_[diff + half_gauss_size];
+                g += static_cast<double>(new_bitmap(h, xx).g) * coeffs_[diff + half_gauss_size];
+                b += static_cast<double>(new_bitmap(h, xx).b) * coeffs_[diff + half_gauss_size];
             }
-            pixel.r = static_cast<u_char>(static_cast<double>(pixel.r) / sum);
-            pixel.g = static_cast<u_char>(static_cast<double>(pixel.g) / sum);
-            pixel.b = static_cast<u_char>(static_cast<double>(pixel.b) / sum);
-        }
-    }
 
-    for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
-        for (size_t j = 0; j < bmp.GetColsNum(); ++j) {
-            bmp(i, j) = new_bitmap(i, j);
+            pixel.r = static_cast<u_char>(r/sum);
+            pixel.g = static_cast<u_char>(g/sum);
+            pixel.b = static_cast<u_char>(b/sum);
         }
     }
 }
