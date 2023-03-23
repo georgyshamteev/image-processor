@@ -19,7 +19,6 @@ public:
 private:
     std::string_view input_file_name_;
     std::string_view output_file_name_;
-    size_t number_of_parameters_;
     std::vector<FilterDescriptors> filter_descriptors_;
 };
 

@@ -42,7 +42,11 @@ std::unique_ptr<BasicFilter> MakeEdgeDetection(const FilterDescriptors& fd) {
 }
 
 std::unique_ptr<BasicFilter> MakeGaussianBlur(const FilterDescriptors& fd) {
-    return nullptr;
+    if (fd.parameters.size() != 1) {
+        throw std::invalid_argument("Wrong number of arguments. EdgeDetection only takes 1 argument.");
+    }
+    const std::string sigma = {fd.parameters[0].begin(), fd.parameters[0].end()};
+    return std::make_unique<GaussianBlur>(std::stod(sigma));
 }
 
 //// CREATING MAP
@@ -53,6 +57,7 @@ FilterProducing::FilterProducing() {
     pipeline_["neg"] = &MakeNegative;
     pipeline_["sharp"] = &MakeSharpening;
     pipeline_["edge"] = &MakeEdgeDetection;
+    pipeline_["blur"] = &MakeGaussianBlur;
 }
 
 //// GET FUNCTION

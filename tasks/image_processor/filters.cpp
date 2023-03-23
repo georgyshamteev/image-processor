@@ -1,3 +1,4 @@
+#include <cmath>
 #include "filters.h"
 #include "vector"
 
@@ -12,15 +13,15 @@ void CastRgb(double r, double g, double b, Bitmap::Pixel& px) {
 
 //// APPLY MATRIX
 
-std::vector<Bitmap::Pixel> GetNeighbours(size_t ii, size_t jj, Bitmap& bmp) {
+std::vector<Bitmap::Pixel> GetNeighbours(size_t ii, size_t jj, Bitmap& bmp, int32_t size) {
     std::vector<Bitmap::Pixel> result;
     ssize_t i = static_cast<ssize_t>(ii);
     ssize_t j = static_cast<ssize_t>(jj);
     ssize_t height = static_cast<ssize_t>(bmp.GetRowsNum());
     ssize_t width = static_cast<ssize_t>(bmp.GetColsNum());
     const ssize_t lower = 0;
-    for (int h = -1; h < 2; ++h) {
-        for (int w = -1; w < 2; ++w) {
+    for (int h = -size/2; h <= size/2; ++h) {
+        for (int w = -size/2; w <= size/2; ++w) {
             result.emplace_back(
                 bmp(std::max(lower, std::min(height - 1, i + h)), std::max(lower, std::min(width - 1, j + w))));
         }
@@ -30,23 +31,24 @@ std::vector<Bitmap::Pixel> GetNeighbours(size_t ii, size_t jj, Bitmap& bmp) {
 
 template <typename T>
 void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
-    const int upper_bound = 255;
+    const double upper = 255;
+    const double lower = 0;
     TMatrix<Bitmap::Pixel> new_bmp(bmp.GetRowsNum(), bmp.GetColsNum());
-
+    int32_t size = std::sqrt(kernel.size());
     for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
         for (size_t j = 0; j < bmp.GetColsNum(); ++j) {
-            std::vector<Bitmap::Pixel> nbrs = GetNeighbours(i, j, bmp);
-            T res_r = 0;
-            T res_g = 0;
-            T res_b = 0;
+            std::vector<Bitmap::Pixel> nbrs = GetNeighbours(i, j, bmp, size);
+            double res_r = 0;
+            double res_g = 0;
+            double res_b = 0;
             for (size_t idx = 0; idx < nbrs.size(); ++idx) {
-                res_r += static_cast<double>(nbrs[idx].r) * kernel[idx];
-                res_g += static_cast<double>(nbrs[idx].g) * kernel[idx];
-                res_b += static_cast<double>(nbrs[idx].b) * kernel[idx];
+                res_r += static_cast<double>(nbrs[idx].r) / upper * kernel[idx];
+                res_g += static_cast<double>(nbrs[idx].g) / upper * kernel[idx];
+                res_b += static_cast<double>(nbrs[idx].b) / upper * kernel[idx];
             }
-            new_bmp(i, j).r = static_cast<u_char>(std::max(0, std::min(upper_bound, res_r)));
-            new_bmp(i, j).g = static_cast<u_char>(std::max(0, std::min(upper_bound, res_g)));
-            new_bmp(i, j).b = static_cast<u_char>(std::max(0, std::min(upper_bound, res_b)));
+            new_bmp(i, j).r = static_cast<u_char>((std::max(lower, std::min(upper, res_r*upper))));
+            new_bmp(i, j).g = static_cast<u_char>((std::max(lower, std::min(upper, res_g*upper))));
+            new_bmp(i, j).b = static_cast<u_char>((std::max(lower, std::min(upper, res_b*upper))));
         }
     }
     for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
@@ -133,4 +135,38 @@ void EdgeDetection::ApplyFilter(Bitmap& bmp) {
 EdgeDetection::EdgeDetection(double threshold) : threshold_(threshold) {
 }
 EdgeDetection::~EdgeDetection() {
+}
+
+//// GAUSSIAN BLUR
+
+GaussianBlur::~GaussianBlur() {
+}
+
+GaussianBlur::GaussianBlur(double sigma) : sigma_(std::ceil(sigma)) {
+}
+
+double CountGauss(int32_t w, int32_t h, int32_t sigma) {
+    double numenator = std::exp((-pow(w, 2) - pow(h, 2)) / (2 * pow(sigma, 2)));
+    double denumenator = (2 * M_PI * pow(sigma, 2));
+    return numenator / denumenator;
+}
+
+void GaussianBlur::ApplyFilter(Bitmap& bmp) {
+    double matrix_sum = 0;
+    std::vector<double> temporary_mat;
+
+    for (int32_t x = -3 * sigma_; x <= 3 * sigma_; ++x) {
+        for (int32_t y = -3 * sigma_; y <= 3 * sigma_; ++y) {
+            double gauss = CountGauss(x, y, sigma_);
+            matrix_sum += gauss;
+            temporary_mat.push_back(gauss);
+        }
+    }
+    int32_t size = std::ceil(std::sqrt(temporary_mat.size()));
+    for (int32_t x = -3 * sigma_; x <= 3 * sigma_; ++x) {
+        for (int32_t y = -3 * sigma_; y <= 3 * sigma_; ++y) {
+            temporary_mat[(x + 3 * sigma_)*size + (y + 3 * sigma_)] /= matrix_sum;
+        }
+    }
+    ApplyMatrix(bmp, temporary_mat);
 }

@@ -61,4 +61,13 @@ private:
     const double threshold_;
 };
 
+class GaussianBlur : public BasicFilter {
+public:
+    ~GaussianBlur() override;
+    explicit GaussianBlur(double sigma);
+    void ApplyFilter(Bitmap& bmp) override;
+private:
+    int32_t sigma_;
+};
+
 #endif  // CPP_HSE_FILTERS_H

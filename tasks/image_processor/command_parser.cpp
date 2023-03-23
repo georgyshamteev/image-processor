@@ -17,32 +17,24 @@ bool Parser::Parse(int argc, char* argv[]) {
                   << std::endl;
         return false;
     }
-    number_of_parameters_ = argc - 1;
-
-    // первые два аргумента - это путь к входному и выходному файлам
     input_file_name_ = argv[1];
     output_file_name_ = argv[2];
 
-    // пробегаемся по оставшимся аргументам и ищем фильтры
     for (int i = 3; i < argc; ++i) {
         std::string_view arg = argv[i];
         if (arg.empty()) {
             continue;
         }
 
-        // если аргумент начинается с '-', то это фильтр
         if (arg[0] == '-') {
-            // выделяем имя фильтра
             std::string_view filter_name = arg.substr(1);
             if (filter_name.empty()) {
                 std::cerr << "Error: empty filter name" << std::endl;
                 return false;
             }
 
-            // создаем дескриптор фильтра и добавляем его в вектор
             FilterDescriptors filter_desc = {filter_name, {}};
 
-            // выделяем параметры фильтра
             int j = i + 1;
             while (j < argc && argv[j][0] != '-') {
                 filter_desc.parameters.emplace_back(argv[j]);
