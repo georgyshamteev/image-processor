@@ -20,8 +20,8 @@ std::vector<Bitmap::Pixel> GetNeighbours(size_t ii, size_t jj, Bitmap& bmp, int3
     ssize_t height = static_cast<ssize_t>(bmp.GetRowsNum());
     ssize_t width = static_cast<ssize_t>(bmp.GetColsNum());
     const ssize_t lower = 0;
-    for (int h = -size/2; h <= size/2; ++h) {
-        for (int w = -size/2; w <= size/2; ++w) {
+    for (int h = -size / 2; h <= size / 2; ++h) {
+        for (int w = -size / 2; w <= size / 2; ++w) {
             result.emplace_back(
                 bmp(std::max(lower, std::min(height - 1, i + h)), std::max(lower, std::min(width - 1, j + w))));
         }
@@ -46,9 +46,9 @@ void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
                 res_g += static_cast<double>(nbrs[idx].g) / upper * kernel[idx];
                 res_b += static_cast<double>(nbrs[idx].b) / upper * kernel[idx];
             }
-            new_bmp(i, j).r = static_cast<u_char>((std::max(lower, std::min(upper, res_r*upper))));
-            new_bmp(i, j).g = static_cast<u_char>((std::max(lower, std::min(upper, res_g*upper))));
-            new_bmp(i, j).b = static_cast<u_char>((std::max(lower, std::min(upper, res_b*upper))));
+            new_bmp(i, j).r = static_cast<u_char>((std::max(lower, std::min(upper, res_r * upper))));
+            new_bmp(i, j).g = static_cast<u_char>((std::max(lower, std::min(upper, res_g * upper))));
+            new_bmp(i, j).b = static_cast<u_char>((std::max(lower, std::min(upper, res_b * upper))));
         }
     }
     for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
@@ -165,7 +165,7 @@ void GaussianBlur::ApplyFilter(Bitmap& bmp) {
     int32_t size = std::ceil(std::sqrt(temporary_mat.size()));
     for (int32_t x = -3 * sigma_; x <= 3 * sigma_; ++x) {
         for (int32_t y = -3 * sigma_; y <= 3 * sigma_; ++y) {
-            temporary_mat[(x + 3 * sigma_)*size + (y + 3 * sigma_)] /= matrix_sum;
+            temporary_mat[(x + 3 * sigma_) * size + (y + 3 * sigma_)] /= matrix_sum;
         }
     }
     ApplyMatrix(bmp, temporary_mat);
