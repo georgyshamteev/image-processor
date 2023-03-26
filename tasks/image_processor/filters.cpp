@@ -51,7 +51,12 @@ void ApplyMatrix(Bitmap& bmp, const std::vector<T>& kernel) {
             new_bmp(i, j).b = static_cast<u_char>((std::max(lower, std::min(upper, res_b))));
         }
     }
-    bmp = new_bmp;
+    //    bmp = new_bmp;
+    for (size_t i = 0; i < bmp.GetRowsNum(); ++i) {
+        for (size_t j = 0; j < bmp.GetColsNum(); ++j) {
+            bmp(i, j) = new_bmp(i, j);
+        }
+    }
 }
 }  // namespace
 //// CROP
