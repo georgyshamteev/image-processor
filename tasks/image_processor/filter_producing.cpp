@@ -59,21 +59,21 @@ std::unique_ptr<BasicFilter> MakeSobel(const FilterDescriptors& fd) {
 //// CREATING MAP
 
 FilterProducing::FilterProducing() {
-    pipeline_["crop"] = &MakeCrop;
-    pipeline_["gs"] = &MakeGrayScale;
-    pipeline_["neg"] = &MakeNegative;
-    pipeline_["sharp"] = &MakeSharpening;
-    pipeline_["edge"] = &MakeEdgeDetection;
-    pipeline_["blur"] = &MakeGaussianBlur;
-    pipeline_["sobel"] = &MakeSobel;
+    filter_map_["crop"] = &MakeCrop;
+    filter_map_["gs"] = &MakeGrayScale;
+    filter_map_["neg"] = &MakeNegative;
+    filter_map_["sharp"] = &MakeSharpening;
+    filter_map_["edge"] = &MakeEdgeDetection;
+    filter_map_["blur"] = &MakeGaussianBlur;
+    filter_map_["sobel"] = &MakeSobel;
 }
 
 //// GET FUNCTION
 
 std::unique_ptr<BasicFilter> FilterProducing::GetFilter(const FilterDescriptors& fd) {
-    auto it = pipeline_.find(fd.name);
-    if (it == pipeline_.end()) {
+    auto it = filter_map_.find(fd.name);
+    if (it == filter_map_.end()) {
         throw std::invalid_argument("wrong filter name");
     }
-    return (pipeline_[fd.name])(fd);
+    return (filter_map_[fd.name])(fd);
 }

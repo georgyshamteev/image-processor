@@ -27,7 +27,7 @@ public:
     std::unique_ptr<BasicFilter> GetFilter(const FilterDescriptors& fd);
 
 private:
-    std::map<std::string_view, ProducedFilter> pipeline_;
+    std::map<std::string_view, ProducedFilter> filter_map_;
 };
 
 #endif  // CPP_HSE_FILTER_PRODUCING_H
