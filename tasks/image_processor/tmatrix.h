@@ -100,18 +100,36 @@ public:
     TMatrix() : table_(nullptr), rows_num_{0}, cols_num_(0) {
     }
 
-    TMatrix(const TMatrix<T>&) = delete;
+    TMatrix(const TMatrix<T>& other) {
+        rows_num_ = other.rows_num_;
+        cols_num_ = other.cols_num_;
+        table_ = AllocateMatrix(rows_num_, cols_num_);
+        for (size_t i = 0; i < rows_num_; ++i) {
+            for (size_t j = 0; j < cols_num_; ++j) {
+                this->operator()(i, j) = other.operator()(i, j);
+            }
+        }
+    };
+
+    TMatrix(TMatrix<T>&& other) {
+        rows_num_ = other.rows_num_;
+        cols_num_ = other.cols_num_;
+        table_ = other.table_;
+        other.table_ = nullptr;
+        other.cols_num_ = 0;
+        other.rows_num_ = 0;
+    }
 
     TMatrix(size_t rows_num, size_t cols_num, T def = T{}) {
         if (rows_num == 0 && cols_num == 0) {
             rows_num_ = 0;
             cols_num_ = 0;
             table_ = nullptr;
-            throw std::invalid_argument("Can't make matrix with 0 rows or columns");
+            throw std::runtime_error("Can't make matrix with 0 rows or columns");
         }
 
         if (rows_num == 0 || cols_num == 0) {
-            throw std::invalid_argument("Can't make matrix with 0 rows or columns");
+            throw std::runtime_error("Can't make matrix with 0 rows or columns");
         }
         rows_num_ = rows_num;
         cols_num_ = cols_num;
@@ -126,6 +144,28 @@ public:
 
     ~TMatrix() {
         Clear();
+    }
+
+    TMatrix<T>& operator=(const TMatrix<T>& other) {
+        rows_num_ = other.rows_num_;
+        cols_num_ = other.cols_num_;
+        table_ = AllocateMatrix(rows_num_, cols_num_);
+        for (size_t i = 0; i < rows_num_; ++i) {
+            for (size_t j = 0; j < cols_num_; ++j) {
+                this->operator()(i, j) = other.operator()(i, j);
+            }
+        }
+        return *this;
+    }
+
+    TMatrix<T>& operator=(TMatrix<T>&& other) {
+        rows_num_ = other.rows_num_;
+        cols_num_ = other.cols_num_;
+        table_ = other.table_;
+        other.table_ = nullptr;
+        other.cols_num_ = 0;
+        other.rows_num_ = 0;
+        return *this;
     }
 
     T operator()(size_t i, size_t j) const {
