@@ -3,24 +3,24 @@
 Application::Application(int argc, char** argv) : argc_(argc), argv_(argv) {
 }
 
+void Application::ApplyFilters(Bitmap& bm, Pipeline& pipeline) {
+    for (const auto& i : pipeline) {
+        i->ApplyFilter(bm);
+    }
+}
+
 void Application::Run() {
     Parser parser;
     parser.Parse(argc_, argv_);
 
     Bitmap bm;
+    bm.ReadBmp(parser.GetInputFileName());
 
-    std::string s(parser.GetInputFileName());
+    PipelineGenerator pipeline_generator(parser.GetFilterDescriptors());
+    Pipeline pipeline = pipeline_generator.CreatePipeline();
 
-    bm.ReadBmp(static_cast<std::string>(parser.GetInputFileName()));
+    ApplyFilters(bm, pipeline);
 
-    Pipeline pipeline(parser.GetFilterDescriptors());
-
-    std::vector<std::unique_ptr<BasicFilter>> pipe = pipeline.CreatePipeline();
-
-    for (const auto& i : pipe) {
-        i->ApplyFilter(bm);
-        std::cout << "FILTER APPLIED" << std::endl;
-    }
-
-    bm.WriteBmp(static_cast<std::string>(parser.GetOutputFileName()));
+    bm.WriteBmp(parser.GetOutputFileName());
 }
+

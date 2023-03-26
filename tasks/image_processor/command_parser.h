@@ -12,13 +12,13 @@ struct FilterDescriptors {
 class Parser {
 public:
     bool Parse(int argc, char* argv[]);
-    std::string_view GetOutputFileName() const;
-    std::string_view GetInputFileName() const;
+    std::string GetOutputFileName() const;
+    std::string GetInputFileName() const;
     const std::vector<FilterDescriptors>& GetFilterDescriptors() const;
 
 private:
-    std::string_view input_file_name_;
-    std::string_view output_file_name_;
+    std::string input_file_name_;
+    std::string output_file_name_;
     std::vector<FilterDescriptors> filter_descriptors_;
 };
 

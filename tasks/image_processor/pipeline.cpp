@@ -1,10 +1,10 @@
 #include "pipeline.h"
 
-Pipeline::Pipeline(const std::vector<FilterDescriptors>& descriptors) : descriptors_(descriptors) {
+PipelineGenerator::PipelineGenerator(const std::vector<FilterDescriptors>& descriptors) : descriptors_(descriptors) {
 }
 
-std::vector<std::unique_ptr<BasicFilter>> Pipeline::CreatePipeline() {
-    std::vector<std::unique_ptr<BasicFilter>> vector_filters;
+Pipeline PipelineGenerator::CreatePipeline() {
+    Pipeline vector_filters;
     FilterProducing filter_producer;
 
     for (const auto& i : descriptors_) {

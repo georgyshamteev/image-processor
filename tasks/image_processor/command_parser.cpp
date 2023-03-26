@@ -1,9 +1,9 @@
 #include "command_parser.h"
 
-std::string_view Parser::GetOutputFileName() const {
+std::string Parser::GetOutputFileName() const {
     return output_file_name_;
 }
-std::string_view Parser::GetInputFileName() const {
+std::string Parser::GetInputFileName() const {
     return input_file_name_;
 }
 const std::vector<FilterDescriptors>& Parser::GetFilterDescriptors() const {
@@ -41,7 +41,6 @@ bool Parser::Parse(int argc, char* argv[]) {
                 j++;
             }
             filter_descriptors_.push_back(filter_desc);
-            //            i = j - 1;
         }
     }
 

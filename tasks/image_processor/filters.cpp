@@ -143,8 +143,8 @@ GaussianBlur::~GaussianBlur() {
 }
 
 GaussianBlur::GaussianBlur(double sigma) : sigma_(std::ceil(sigma)) {
-    const size_t gauss_size = static_cast<size_t>(std::ceil(6 * sigma_)) + 1;
-    const size_t half_gauss_size = gauss_size / 2;
+    const int32_t gauss_size = static_cast<int32_t>(std::ceil(6 * sigma_)) + 1;
+    const int32_t half_gauss_size = gauss_size / 2;
 
     coeffs_.resize(gauss_size);
 

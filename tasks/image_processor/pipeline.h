@@ -5,10 +5,12 @@
 #include "filter_producing.h"
 #include <memory>
 
-class Pipeline {
+using Pipeline = std::vector<std::unique_ptr<BasicFilter>>;
+
+class PipelineGenerator {
 public:
-    explicit Pipeline(const std::vector<FilterDescriptors>& descriptors);
-    std::vector<std::unique_ptr<BasicFilter>> CreatePipeline();
+    explicit PipelineGenerator(const std::vector<FilterDescriptors>& descriptors);
+    Pipeline CreatePipeline();
 
 private:
     const std::vector<FilterDescriptors> descriptors_;

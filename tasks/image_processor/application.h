@@ -12,10 +12,10 @@ class Application {
 public:
     Application(int argc, char* argv[]);
     void Run();
-
 private:
     int argc_;
     char** argv_;
+    void ApplyFilters(Bitmap& bm, Pipeline& pipeline);
 };
 
 #endif  // CPP_HSE_APPLICATION_H
