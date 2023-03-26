@@ -208,3 +208,12 @@ void GaussianBlur::ApplyFilter(Bitmap& bmp) {
         }
     }
 }
+
+//// SOBEL
+
+Sobel::~Sobel() {
+}
+
+void Sobel::ApplyFilter(Bitmap& bmp) {
+    ApplyMatrix(bmp, kernel_);
+}

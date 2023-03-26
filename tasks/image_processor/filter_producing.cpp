@@ -49,6 +49,13 @@ std::unique_ptr<BasicFilter> MakeGaussianBlur(const FilterDescriptors& fd) {
     return std::make_unique<GaussianBlur>(std::stod(sigma));
 }
 
+std::unique_ptr<BasicFilter> MakeSobel(const FilterDescriptors& fd) {
+    if (!fd.parameters.empty()) {
+        throw std::invalid_argument("Sobel doesn`t take any arguments. Consider deleting all arguments.");
+    }
+    return std::make_unique<Sobel>();
+}
+
 //// CREATING MAP
 
 FilterProducing::FilterProducing() {
@@ -58,6 +65,7 @@ FilterProducing::FilterProducing() {
     pipeline_["sharp"] = &MakeSharpening;
     pipeline_["edge"] = &MakeEdgeDetection;
     pipeline_["blur"] = &MakeGaussianBlur;
+    pipeline_["sobel"] = &MakeSobel;
 }
 
 //// GET FUNCTION

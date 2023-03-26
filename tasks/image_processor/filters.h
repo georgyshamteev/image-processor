@@ -72,4 +72,12 @@ private:
     std::vector<double> coeffs_;
 };
 
+class Sobel : public BasicFilter {
+public:
+    ~Sobel() override;
+    void ApplyFilter(Bitmap& bmp) override;
+
+private:
+    const std::vector<int> kernel_ = {-1, -2, -1, 0, 0, 0, 1, 2, 1};
+};
 #endif  // CPP_HSE_FILTERS_H

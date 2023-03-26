@@ -14,6 +14,7 @@ std::unique_ptr<BasicFilter> MakeNegative(const FilterDescriptors& fd);
 std::unique_ptr<BasicFilter> MakeSharpening(const FilterDescriptors& fd);
 std::unique_ptr<BasicFilter> MakeEdgeDetection(const FilterDescriptors& fd);
 std::unique_ptr<BasicFilter> MakeGaussianBlur(const FilterDescriptors& fd);
+std::unique_ptr<BasicFilter> MakeSobel(const FilterDescriptors& fd);
 
 }  // namespace filter_producing_functions
 

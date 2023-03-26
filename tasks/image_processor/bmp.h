@@ -50,6 +50,7 @@ public:
     void SetWidthHeight(int32_t w, int32_t h);
 
 private:
+    void CheckBMP(const BmpHeader& header, const BmpInfo& info, const std::string& filename);
     TMatrix<Pixel> bmp_ = {};
     BmpHeader bmp_header_;
     BmpInfo bmp_info_;
