@@ -23,4 +23,3 @@ void Application::Run() {
 
     bm.WriteBmp(parser.GetOutputFileName());
 }
-
